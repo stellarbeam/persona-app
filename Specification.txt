@@ -1,0 +1,27 @@
+# The user login flow
+
+Create a login page with phone number and password [2FA]
+
+The user shall be able to select the role he is choosing to sign in/sign up [ Admin, Boss, Employee]
+
+# In the sign-up
+
+The user shall be taken to a screen where he is prompted to fill in his details and pick the role they wish to sign-up for.
+For some roles, the users shall be prompted some extra fields.
+And next button.
+
+On clicking next, he should be prompted for the OTP (use firebase phone verification).
+When verified take them back to Login.
+
+
+Begin a user onboarding flow on successful Login that gives users a small walkthrough.
+Also give them an option to skip it.
+
+Please note:
+
+The application shall have a splash screen.
+
+Users shall be prompted to pick their default language when the application starts, default shall be English
+There shall be option to change the language at any point.
+
+Light mode and Dark mode to not hurt my eyes at 2AM ;)
