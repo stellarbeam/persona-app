@@ -16,29 +16,29 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  AuthBloc _authBloc;
+
+  @override
+  void initState() {
+    _authBloc = AuthBloc();
+    initializeFlutterFire();
+    super.initState();
+  }
+
   void initializeFlutterFire() async {
     try {
-      // TODO: Implement flutterfire bloc
       await Firebase.initializeApp();
-      //* SUCCESS: Connected to server
-      // flutterfireBloc.add(ServerConnected());
+      _authBloc.add(AuthInitialized());
     } catch (e) {
+      print('Error $e}');
       //! ERROR: Could not connect to server
-      // flutterfireBloc.add(ServerError());
     }
   }
 
   @override
-  void initState() {
-    initializeFlutterFire();
-
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AuthBloc(),
+    return BlocProvider.value(
+      value: _authBloc,
       child: MaterialApp(
         title: 'Persona',
         theme: ThemeData(
@@ -46,16 +46,7 @@ class _MyAppState extends State<MyApp> {
           accentColor: Colors.pinkAccent,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: BlocProvider.value(
-          value: BlocProvider.of<AuthBloc>(context),
-          child: SignInScreen(),
-        ),
-        routes: {
-          SignInScreen.routeName: (context) => BlocProvider.value(
-                value: BlocProvider.of<AuthBloc>(context),
-                child: SignInScreen(),
-              ),
-        },
+        home: SignInScreen(),
       ),
     );
   }

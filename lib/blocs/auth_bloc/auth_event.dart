@@ -16,6 +16,8 @@ class AuthSendOTP extends AuthEvent {
 
 class AuthUninitialized extends AuthEvent {}
 
+class AuthInitialized extends AuthEvent {}
+
 class AuthLogin extends AuthEvent {}
 
 class AuthVerifyCode extends AuthEvent {}

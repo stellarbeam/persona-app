@@ -5,15 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user.dart' as models;
 
 class FirebaseAuthRepo {
-  final FirebaseAuth _firebaseAuth;
-  final FirebaseFirestore _firebaseFirestore;
-
-  FirebaseAuthRepo({
-    FirebaseAuth firebaseAuth,
-    FirebaseFirestore firestore,
-  })  : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
-        _firebaseFirestore = firestore ?? FirebaseFirestore.instance;
-
   // The argument functions must be provided by calling bloc,
   // since bloc is responsible for logic and providing states.
   Future<void> verifyPhoneNumber({
@@ -23,7 +14,7 @@ class FirebaseAuthRepo {
     @required Function codeAutoRetrievalTimeout,
     @required Function codeSent,
   }) async {
-    await _firebaseAuth.verifyPhoneNumber(
+    await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: phoneNumber,
       verificationCompleted: verificationCompleted,
       verificationFailed: verificationFailed,
@@ -33,8 +24,8 @@ class FirebaseAuthRepo {
   }
 
   Future<void> setCurrentUserRole(models.Role role) async {
-    User user = _firebaseAuth.currentUser;
-    CollectionReference users = _firebaseFirestore.collection('users');
+    User user = FirebaseAuth.instance.currentUser;
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
 
     // TODO: Come up with better way to set role value
     await users.doc(user.uid).set({
@@ -43,8 +34,8 @@ class FirebaseAuthRepo {
   }
 
   Future<models.Role> getCurrentUserRole() async {
-    User user = _firebaseAuth.currentUser;
-    CollectionReference users = _firebaseFirestore.collection('users');
+    User user = FirebaseAuth.instance.currentUser;
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
     models.Role role;
 
     final document = await users
@@ -69,7 +60,7 @@ class FirebaseAuthRepo {
   }
 
   Future<models.User> getUser() async {
-    User firebaseUser = _firebaseAuth.currentUser;
+    User firebaseUser = FirebaseAuth.instance.currentUser;
     var role = await getCurrentUserRole();
 
     return models.User(
@@ -81,7 +72,7 @@ class FirebaseAuthRepo {
   }
 
   bool isAuthenticated() {
-    return _firebaseAuth.currentUser != null;
+    return FirebaseAuth.instance.currentUser != null;
   }
 
   Future<models.User> signInWithSmsCode(

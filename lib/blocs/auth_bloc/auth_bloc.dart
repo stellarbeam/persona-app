@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,7 +23,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async* {
     if (event is AuthUninitialized) {
       yield AuthInitial();
-
+    } else if (event is AuthInitialized) {
       if (authRepo.isAuthenticated()) {
         final user = await authRepo.getUser();
         yield AuthAuthorized(user);
