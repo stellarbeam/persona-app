@@ -9,9 +9,7 @@ abstract class AuthEvent extends Equatable {
 
 class AuthSendOTP extends AuthEvent {
   final String number;
-  AuthSendOTP({
-    this.number,
-  });
+  AuthSendOTP(this.number);
 }
 
 class AuthUninitialized extends AuthEvent {}

@@ -21,6 +21,7 @@ class FirebaseAuthRepo {
       codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
       codeSent: codeSent,
     );
+    print("Called verify");
   }
 
   Future<void> setCurrentUserRole(models.Role role) async {
@@ -36,12 +37,20 @@ class FirebaseAuthRepo {
   Future<models.Role> getCurrentUserRole() async {
     User user = FirebaseAuth.instance.currentUser;
     CollectionReference users = FirebaseFirestore.instance.collection('users');
-    models.Role role;
+    models.Role role = null;
 
     final document = await users
         .doc(user.uid)
         .get()
-        .then((DocumentSnapshot snapshot) => snapshot.data());
+        .then((DocumentSnapshot snapshot) => snapshot.data())
+        .catchError((e) {
+      print("No such document");
+    });
+
+    if (role != null) return role;
+
+    print(document);
+    return models.Role.Admin;
 
     // TODO: Handle possible error from doc.get()
     switch (document['role']) {
@@ -84,13 +93,20 @@ class FirebaseAuthRepo {
       verificationId: verificationId,
     );
 
-    final userCredential =
-        await FirebaseAuth.instance.signInWithCredential(authCredential);
+    final userCredential = await signInWithCredential(authCredential);
 
+    return userFromFirebaseUser(userCredential.user);
+  }
+
+  Future<UserCredential> signInWithCredential(AuthCredential authCredential) {
+    return FirebaseAuth.instance.signInWithCredential(authCredential);
+  }
+
+  models.User userFromFirebaseUser(User user) {
     return models.User(
-      userId: userCredential.user.uid,
-      phoneNumber: userCredential.user.phoneNumber,
-      userName: userCredential.user.displayName,
+      userId: user.uid,
+      phoneNumber: user.phoneNumber,
+      userName: user.displayName,
     );
   }
 }

@@ -11,13 +11,13 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  AuthBloc authBloc;
+  // ignore: close_sinks
+  AuthBloc _authBloc;
 
   @override
   void initState() {
-    authBloc = BlocProvider.of<AuthBloc>(context);
+    _authBloc = BlocProvider.of<AuthBloc>(context);
     super.initState();
-    authBloc.add(AuthUninitialized());
   }
 
   @override
@@ -26,19 +26,27 @@ class _SignInScreenState extends State<SignInScreen> {
       body: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
           if (state is AuthUnauthorized) {
-            return SignInForm();
+            return SignInForm(_authBloc);
           } else if (state is AuthInitial) {
             return Container(
               child: Center(
                 child: Text("Waiting for firestore"),
               ),
             );
-          } else {
+          } else if (state is AuthCodeSent) {
             return Container(
               child: Center(
-                child: Text("Waiting ..."),
+                child: Text("Auth Code sent."),
               ),
             );
+          } else if (state is AuthAuthorized) {
+            return Container(
+              child: Center(
+                child: Text("Name" + state.user.userName),
+              ),
+            );
+          } else {
+            return Container();
           }
         },
       ),
@@ -47,12 +55,16 @@ class _SignInScreenState extends State<SignInScreen> {
 }
 
 class SignInForm extends StatefulWidget {
+  final AuthBloc _authBloc;
+
+  SignInForm(this._authBloc);
+
   @override
   _SignInFormState createState() => _SignInFormState();
 }
 
 class _SignInFormState extends State<SignInForm> {
-  final TextEditingController phoneNumController = TextEditingController();
+  TextEditingController phoneNumController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +87,10 @@ class _SignInFormState extends State<SignInForm> {
             FlatButton(
               child: Text("Send code"),
               onPressed: () {
-                print("+91" + phoneNumController.text);
+                String number = "+91" + phoneNumController.text;
+                print(number);
+                widget._authBloc.add(AuthSendOTP(number));
+                print("SendOTP Event added.");
               },
             ),
           ],
