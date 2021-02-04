@@ -37,7 +37,7 @@ class FirebaseAuthRepo {
   Future<models.Role> getCurrentUserRole() async {
     User user = FirebaseAuth.instance.currentUser;
     CollectionReference users = FirebaseFirestore.instance.collection('users');
-    models.Role role = null;
+    models.Role role;
 
     final document = await users
         .doc(user.uid)
