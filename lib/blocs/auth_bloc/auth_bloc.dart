@@ -13,18 +13,21 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   FirebaseAuthRepo _authRepo;
+  bool _firebaseInitialized;
 
   AuthBloc() : super(AuthInitial()) {
     _authRepo = FirebaseAuthRepo();
+    _firebaseInitialized = false;
   }
 
   @override
   Stream<AuthState> mapEventToState(
     AuthEvent event,
   ) async* {
-    if (event is AuthUninitialized) {
+    if (event is AuthStarted) {
       yield AuthInitial();
-    } else if (event is AuthInitialized) {
+    } else if (event is AuthFirebaseInitialized) {
+      _firebaseInitialized = true;
       if (_authRepo.isAuthenticated()) {
         print("Authenticated. Trying to fetch user.");
         final user = await _authRepo.getUser();

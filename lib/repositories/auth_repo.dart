@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../models/role.dart';
 import '../models/user.dart' as models;
 
 class FirebaseAuthRepo {
@@ -24,20 +25,19 @@ class FirebaseAuthRepo {
     print("Called verify");
   }
 
-  Future<void> setCurrentUserRole(models.Role role) async {
+  Future<void> setCurrentUserRole(Role role) async {
     User user = FirebaseAuth.instance.currentUser;
     CollectionReference users = FirebaseFirestore.instance.collection('users');
 
-    // TODO: Come up with better way to set role value
     await users.doc(user.uid).set({
-      'role': role.toString().split('.').last,
+      'role': role.name,
     });
   }
 
-  Future<models.Role> getCurrentUserRole() async {
+  Future<Role> getCurrentUserRole() async {
     User user = FirebaseAuth.instance.currentUser;
     CollectionReference users = FirebaseFirestore.instance.collection('users');
-    models.Role role;
+    Role role;
 
     final document = await users
         .doc(user.uid)
@@ -50,18 +50,18 @@ class FirebaseAuthRepo {
     if (role != null) return role;
 
     print(document);
-    return models.Role.Admin;
+    return Admin();
 
     // TODO: Handle possible error from doc.get()
     switch (document['role']) {
       case 'Admin':
-        role = models.Role.Admin;
+        role = Admin();
         break;
       case 'Boss':
-        role = models.Role.Boss;
+        role = Boss();
         break;
       case 'Employee':
-        role = models.Role.Employee;
+        role = Employee();
         break;
     }
 

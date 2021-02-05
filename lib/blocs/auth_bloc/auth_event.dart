@@ -12,9 +12,9 @@ class AuthSendOTP extends AuthEvent {
   AuthSendOTP(this.number);
 }
 
-class AuthUninitialized extends AuthEvent {}
+class AuthStarted extends AuthEvent {}
 
-class AuthInitialized extends AuthEvent {}
+class AuthFirebaseInitialized extends AuthEvent {}
 
 class AuthLogin extends AuthEvent {}
 
