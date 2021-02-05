@@ -39,33 +39,31 @@ class FirebaseAuthRepo {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
     Role role;
 
-    final document = await users
-        .doc(user.uid)
-        .get()
-        .then((DocumentSnapshot snapshot) => snapshot.data())
-        .catchError((e) {
+    var documentSnapshot = await users.doc(user.uid).get();
+
+    var document;
+
+    if (documentSnapshot != null) {
+      document = documentSnapshot.data();
+      switch (document['role']) {
+        case 'Admin':
+          role = Admin();
+          break;
+        case 'Boss':
+          role = Boss();
+          break;
+        case 'Employee':
+          role = Employee();
+          break;
+        default:
+          role = null;
+      }
+      if (role == null) {}
+      return role;
+    } else {
       print("No such document");
-    });
-
-    if (role != null) return role;
-
-    print(document);
-    return Admin();
-
-    // TODO: Handle possible error from doc.get()
-    switch (document['role']) {
-      case 'Admin':
-        role = Admin();
-        break;
-      case 'Boss':
-        role = Boss();
-        break;
-      case 'Employee':
-        role = Employee();
-        break;
     }
-
-    return role;
+    return null;
   }
 
   Future<models.User> getUser() async {
