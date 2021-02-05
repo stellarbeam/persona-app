@@ -21,7 +21,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     _authBloc = AuthBloc();
-    _authBloc.add(AuthStarted());
     initializeFlutterFire();
     super.initState();
   }
@@ -29,7 +28,7 @@ class _MyAppState extends State<MyApp> {
   void initializeFlutterFire() async {
     try {
       await Firebase.initializeApp();
-      _authBloc.add(AuthFirebaseInitialized());
+      _authBloc.add(FirebaseInitialized());
       print("Firebase initialized.");
     } catch (e) {
       print('Error $e}');
