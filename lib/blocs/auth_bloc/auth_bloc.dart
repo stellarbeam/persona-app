@@ -15,6 +15,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   FirebaseAuthRepo _authRepo;
   bool isCodeSent = false;
   bool timedOut = false;
+  bool waitingForVerification = false;
   String verificationId;
   String resendToken;
 
@@ -24,7 +25,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   void onFail(String code) {
     if (code == 'invalid-verification-code') {
-      // this.add(AuthFailure());
+      //? Use callback from otp_input_screen
+      print("Wrong code");
     }
   }
 
@@ -70,6 +72,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           resendToken = resendToken;
         },
       );
+    } else if (event is EnterVerificationCode) {
+      // Use this to show spinner within otp_input_screen
+      waitingForVerification = true;
+
+      _authRepo.signInWithSmsCode(event.smsCode, verificationId, onFail);
     }
   }
 }

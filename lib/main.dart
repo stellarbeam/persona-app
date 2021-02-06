@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:persona/screens/otp_input_screen.dart';
 
 import 'blocs/auth_bloc/auth_bloc.dart';
 import 'screens/authentication_page.dart';
@@ -49,8 +48,7 @@ class _MyAppState extends State<MyApp> {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         debugShowCheckedModeBanner: false,
-        // home: AuthenticationPage(),
-        home: OtpInputScreen("+911231231234"),
+        home: AuthenticationPage(),
       ),
     );
   }

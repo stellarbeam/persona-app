@@ -34,7 +34,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
           } else if (state is UserUnauthorized) {
             return PhoneInputScreen(_authBloc);
           } else if (state is AuthCodeSent) {
-            return OtpInputScreen(state.phoneNumber);
+            return OtpInputScreen(_authBloc, state.phoneNumber);
           } else if (state is UserAuthorized) {
             return Container(
               child: Center(

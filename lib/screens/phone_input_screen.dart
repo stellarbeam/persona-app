@@ -1,6 +1,6 @@
 import 'package:intl_phone_field/phone_number.dart';
 import '../widgets/curve_clipper.dart';
-import '../widgets/phone_number_field.dart';
+import '../widgets/phone_number_form.dart';
 
 import 'package:flutter/material.dart';
 import '../blocs/auth_bloc/auth_bloc.dart';
@@ -130,7 +130,7 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
                       ),
                     ),
                     const SizedBox(height: 40),
-                    PhoneNumberField(_formKey, _validator, _onPhoneChanged),
+                    PhoneNumberForm(_formKey, _validator, _onPhoneChanged),
                     const SizedBox(height: 30),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),

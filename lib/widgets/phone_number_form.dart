@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_field/phone_number.dart';
 
-class PhoneNumberField extends StatelessWidget {
-  const PhoneNumberField(
+class PhoneNumberForm extends StatelessWidget {
+  const PhoneNumberForm(
     this._formKey,
     this._validator,
     this._onPhoneChanged,

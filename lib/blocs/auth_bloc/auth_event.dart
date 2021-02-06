@@ -16,7 +16,10 @@ class FirebaseInitialized extends AuthEvent {}
 
 class AuthLogin extends AuthEvent {}
 
-class AuthVerifyCode extends AuthEvent {}
+class EnterVerificationCode extends AuthEvent {
+  final String smsCode;
+  EnterVerificationCode(this.smsCode);
+}
 
 class AuthChangeNumber extends AuthEvent {}
 
