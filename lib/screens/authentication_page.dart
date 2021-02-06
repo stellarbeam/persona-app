@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:persona/screens/loading_screen.dart';
 
 import '../blocs/auth_bloc/auth_bloc.dart';
+
 import 'phone_input_screen.dart';
+import 'loading_screen.dart';
+import 'otp_input_screen.dart';
 
 class AuthenticationPage extends StatefulWidget {
   static const routeName = '/sign-in';
@@ -32,11 +34,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
           } else if (state is UserUnauthorized) {
             return PhoneInputScreen(_authBloc);
           } else if (state is AuthCodeSent) {
-            return Container(
-              child: Center(
-                child: Text("Auth Code sent."),
-              ),
-            );
+            return OtpInputScreen(state.phoneNumber);
           } else if (state is UserAuthorized) {
             return Container(
               child: Center(

@@ -13,6 +13,20 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   FirebaseAuthRepo _authRepo;
+  bool isCodeSent = false;
+  bool timedOut = false;
+  String verificationId;
+  String resendToken;
+
+  void addVerificationCompleteEvent(User user) {
+    this.add(VerificationComplete(user));
+  }
+
+  void onFail(String code) {
+    if (code == 'invalid-verification-code') {
+      // this.add(AuthFailure());
+    }
+  }
 
   AuthBloc() : super(AuthInitial()) {
     _authRepo = FirebaseAuthRepo();
@@ -30,25 +44,30 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         yield UserUnauthorized();
       }
     } else if (event is AuthSendOTP) {
-      yield AuthLoading();
+      yield AuthCodeSent(event.number);
 
       _authRepo.verifyPhoneNumber(
         phoneNumber: event.number,
         verificationCompleted: (credential) {
-          _authRepo.signInWithCredential(credential).then(
-            (UserCredential userCredential) async* {
-              final user = _authRepo.userFromFirebaseUser(userCredential.user);
-              yield UserAuthorized(user);
-            },
-          );
+          _authRepo
+              .signInWithCredential(credential, onFail)
+              .then((UserCredential userCredential) =>
+                  _authRepo.userFromFirebaseUser(userCredential.user))
+              .then((user) => addVerificationCompleteEvent(user));
         },
-        verificationFailed: (FirebaseAuthException exception) async* {
-          yield AuthFailure();
+        verificationFailed: (FirebaseAuthException exception) {
+          print("Auth failed");
           print(exception.code);
         },
-        codeAutoRetrievalTimeout: (String verificationId) {},
-        codeSent: (String verificationId, int resendToken) async* {
-          yield AuthCodeSent();
+        codeAutoRetrievalTimeout: (String verificationId) {
+          print("Timed out waiting for SMS");
+          timedOut = true;
+        },
+        codeSent: (String verificationId, int resendToken) {
+          print("Code has been sent.");
+          isCodeSent = true;
+          verificationId = verificationId;
+          resendToken = resendToken;
         },
       );
     }

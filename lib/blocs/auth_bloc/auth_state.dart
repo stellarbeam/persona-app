@@ -7,21 +7,22 @@ abstract class AuthState extends Equatable {
   List<Object> get props => [];
 }
 
-class AppLoading extends AuthState {}
+class AuthInitial extends AuthState {} // => Loading Screen
 
-class AuthInitial extends AuthState {}
+// class AuthLoading extends AuthState {} // => Sending OTP
 
-class AuthLoading extends AuthState {}
-
-class AuthCodeSent extends AuthState {}
+class AuthCodeSent extends AuthState {
+  final String phoneNumber;
+  AuthCodeSent(this.phoneNumber);
+} // => OTP input screen
 
 class AuthSuccess extends AuthState {}
 
 class AuthFailure extends AuthState {}
 
-class UserUnauthorized extends AuthState {}
+class UserUnauthorized extends AuthState {} // => Phone Input Screen
 
 class UserAuthorized extends AuthState {
   final User user;
   UserAuthorized(this.user);
-}
+} // => HomeScreen

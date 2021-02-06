@@ -6,8 +6,13 @@ import '../models/role.dart';
 import '../models/user.dart' as models;
 
 class FirebaseAuthRepo {
-  // The argument functions must be provided by calling bloc,
-  // since bloc is responsible for logic and providing states.
+  /// The argument functions must be provided by calling bloc,
+  /// since bloc is responsible for logic and providing states.
+  ///
+  /// [NOTE]: These functions must be strictly `void` or `Future<void>`.
+  /// Functions that are `Stream<void>`  have no effect.
+  /// If a non-async* functions contains function calls to async*
+  /// functions, the async* functions seem to have no effect.
   Future<void> verifyPhoneNumber({
     @required String phoneNumber,
     @required Function verificationCompleted,
@@ -45,6 +50,7 @@ class FirebaseAuthRepo {
 
     if (documentSnapshot != null) {
       document = documentSnapshot.data();
+      if (document == null) return null;
       switch (document['role']) {
         case 'Admin':
           role = Admin();
@@ -58,7 +64,6 @@ class FirebaseAuthRepo {
         default:
           role = null;
       }
-      if (role == null) {}
       return role;
     } else {
       print("No such document");
@@ -85,19 +90,32 @@ class FirebaseAuthRepo {
   Future<models.User> signInWithSmsCode(
     String smsCode,
     String verificationId,
+    Function onFail,
   ) async {
     final authCredential = PhoneAuthProvider.credential(
       smsCode: smsCode,
       verificationId: verificationId,
     );
 
-    final userCredential = await signInWithCredential(authCredential);
+    final userCredential = await signInWithCredential(authCredential, onFail);
 
-    return userFromFirebaseUser(userCredential.user);
+    return userCredential != null
+        ? userFromFirebaseUser(userCredential.user)
+        : null;
   }
 
-  Future<UserCredential> signInWithCredential(AuthCredential authCredential) {
-    return FirebaseAuth.instance.signInWithCredential(authCredential);
+  Future<UserCredential> signInWithCredential(
+    AuthCredential authCredential,
+    Function(String) onFail,
+  ) {
+    try {
+      final userCredential =
+          FirebaseAuth.instance.signInWithCredential(authCredential);
+      return userCredential;
+    } on FirebaseAuthException catch (e) {
+      onFail(e.code);
+      return null;
+    }
   }
 
   models.User userFromFirebaseUser(User user) {

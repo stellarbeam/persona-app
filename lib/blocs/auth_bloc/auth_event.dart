@@ -19,3 +19,8 @@ class AuthLogin extends AuthEvent {}
 class AuthVerifyCode extends AuthEvent {}
 
 class AuthChangeNumber extends AuthEvent {}
+
+class VerificationComplete extends AuthEvent {
+  final User user;
+  VerificationComplete(this.user);
+}

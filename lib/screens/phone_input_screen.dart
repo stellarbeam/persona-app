@@ -19,18 +19,18 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
   String _completeNumber;
   bool _phoneNumberValid;
 
+  /// Always returns [null] so as to not show errors in form itself.
   String _validator(value) {
     setState(() {
       _phoneNumberValid = (value.length == 10) ? true : false;
     });
 
-    /// Always returns [null] so as to not show errors in form itself.
     return null;
   }
 
   void _onPhoneChanged(PhoneNumber number) {
     _completeNumber = number.completeNumber;
-    print("Changed to: $_completeNumber");
+    // print("Changed to: $_completeNumber");
   }
 
   void _onSubmit() {
@@ -111,7 +111,7 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(height: 40),
+                    SizedBox(height: 30),
                     const Text(
                       'Welcome, user!',
                       style: TextStyle(
@@ -120,16 +120,16 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
                         fontFamily: 'Poppins',
                       ),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 15),
                     const Text(
                       "Let's verify you.",
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 25,
+                        fontSize: 20,
                         fontFamily: 'Poppins',
                       ),
                     ),
-                    const SizedBox(height: 50),
+                    const SizedBox(height: 40),
                     PhoneNumberField(_formKey, _validator, _onPhoneChanged),
                     const SizedBox(height: 30),
                     Padding(
@@ -139,7 +139,7 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.black,
-                          fontSize: 16,
+                          fontSize: 12,
                           fontFamily: 'Poppins',
                         ),
                       ),
