@@ -140,17 +140,32 @@ class _OtpInputScreenState extends State<OtpInputScreen> {
                   }
                 },
                 child: Center(
-                  child: Text(
-                    "VERIFY",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
+                        widget._authBloc.waitingForVerification
+                            ? "Verifying"
+                            : "Verify",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      if (widget._authBloc.waitingForVerification)
+                        CircularProgressIndicator(),
+                    ],
                   ),
                 ),
               ),
             ),
+            SizedBox(height: 20),
+            if (widget._authBloc.incorrectOtp)
+              Text(
+                'Incorrect OTP',
+                textAlign: TextAlign.center,
+              )
           ],
         ),
       ),

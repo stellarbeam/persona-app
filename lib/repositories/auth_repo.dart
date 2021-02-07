@@ -13,12 +13,16 @@ class FirebaseAuthRepo {
   /// Functions that are `Stream<void>`  have no effect.
   /// If a non-async* functions contains function calls to async*
   /// functions, the async* functions seem to have no effect.
+  ///
+  /// `forceResendingToken` should be passed when requesting to
+  /// resend verification SMS.
   Future<void> verifyPhoneNumber({
     @required String phoneNumber,
     @required Function verificationCompleted,
     @required Function verificationFailed,
     @required Function codeAutoRetrievalTimeout,
     @required Function codeSent,
+    int forceResendingToken,
   }) async {
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: phoneNumber,
@@ -26,6 +30,7 @@ class FirebaseAuthRepo {
       verificationFailed: verificationFailed,
       codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
       codeSent: codeSent,
+      forceResendingToken: forceResendingToken,
     );
     print("Called verify");
   }
@@ -107,15 +112,20 @@ class FirebaseAuthRepo {
   Future<UserCredential> signInWithCredential(
     AuthCredential authCredential,
     Function(String) onFail,
-  ) {
+  ) async {
     try {
+      print("Invoking signInWithCredential now");
       final userCredential =
-          FirebaseAuth.instance.signInWithCredential(authCredential);
+          await FirebaseAuth.instance.signInWithCredential(authCredential);
       return userCredential;
     } on FirebaseAuthException catch (e) {
       onFail(e.code);
-      return null;
+    } catch (e) {
+      print("Fallback handler:");
+      print(e);
+      onFail("Auth has failed");
     }
+    return null;
   }
 
   models.User userFromFirebaseUser(User user) {

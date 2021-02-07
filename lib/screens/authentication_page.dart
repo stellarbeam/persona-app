@@ -38,7 +38,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
           } else if (state is UserAuthorized) {
             return Container(
               child: Center(
-                child: Text("Name" + state.user.userName),
+                child: Text("Signed in"),
               ),
             );
           } else {

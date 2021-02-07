@@ -2,8 +2,7 @@ import 'dart:async';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:firebase_auth/firebase_auth.dart'
-    show UserCredential, FirebaseAuthException;
+import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuthException;
 
 import '../../models/user.dart';
 import '../../repositories/auth_repo.dart';
@@ -16,8 +15,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   bool isCodeSent = false;
   bool timedOut = false;
   bool waitingForVerification = false;
-  String verificationId;
-  String resendToken;
+  bool incorrectOtp = false;
+  String _verificationId = "";
+  String phoneNumber;
+  int _resendToken;
 
   void addVerificationCompleteEvent(User user) {
     this.add(VerificationComplete(user));
@@ -26,8 +27,36 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   void onFail(String code) {
     if (code == 'invalid-verification-code') {
       //? Use callback from otp_input_screen
+      // Right now handled by null checking of `user` value
       print("Wrong code");
+    } else {
+      print(code);
     }
+  }
+
+  void onVerificationComplete(credential) {
+    _authRepo
+        .signInWithCredential(credential, onFail)
+        .then((userCredential) =>
+            _authRepo.userFromFirebaseUser(userCredential.user))
+        .then((user) => addVerificationCompleteEvent(user));
+  }
+
+  void onVerificationFail(FirebaseAuthException exception) {
+    print("Auth failed");
+    print(exception.code);
+  }
+
+  void onCodeSent(String verificationId, int resendToken) {
+    print("Code has been sent.");
+    isCodeSent = true;
+    _verificationId = verificationId;
+    _resendToken = resendToken;
+  }
+
+  void onCodeAutoRetrievalTimeout(String verificationId) {
+    print("Timed out waiting for SMS");
+    timedOut = true;
   }
 
   AuthBloc() : super(AuthInitial()) {
@@ -50,33 +79,31 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       _authRepo.verifyPhoneNumber(
         phoneNumber: event.number,
-        verificationCompleted: (credential) {
-          _authRepo
-              .signInWithCredential(credential, onFail)
-              .then((UserCredential userCredential) =>
-                  _authRepo.userFromFirebaseUser(userCredential.user))
-              .then((user) => addVerificationCompleteEvent(user));
-        },
-        verificationFailed: (FirebaseAuthException exception) {
-          print("Auth failed");
-          print(exception.code);
-        },
-        codeAutoRetrievalTimeout: (String verificationId) {
-          print("Timed out waiting for SMS");
-          timedOut = true;
-        },
-        codeSent: (String verificationId, int resendToken) {
-          print("Code has been sent.");
-          isCodeSent = true;
-          verificationId = verificationId;
-          resendToken = resendToken;
-        },
+        verificationCompleted: onVerificationComplete,
+        verificationFailed: onVerificationComplete,
+        codeAutoRetrievalTimeout: onCodeAutoRetrievalTimeout,
+        codeSent: onCodeSent,
       );
     } else if (event is EnterVerificationCode) {
       // Use this to show spinner within otp_input_screen
       waitingForVerification = true;
 
-      _authRepo.signInWithSmsCode(event.smsCode, verificationId, onFail);
+      var user = await _authRepo.signInWithSmsCode(
+        event.smsCode,
+        _verificationId,
+        onFail,
+      );
+
+      if (user == null) {
+        print("Setting otp as incorrect");
+        waitingForVerification = false;
+        incorrectOtp = true;
+        yield AuthCodeSent(phoneNumber);
+      } else {
+        yield UserAuthorized(user);
+      }
+    } else if (event is VerificationComplete) {
+      yield (UserAuthorized(event.user));
     }
   }
 }

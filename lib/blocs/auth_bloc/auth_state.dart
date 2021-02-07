@@ -13,7 +13,11 @@ class AuthInitial extends AuthState {} // => Loading Screen
 
 class AuthCodeSent extends AuthState {
   final String phoneNumber;
-  AuthCodeSent(this.phoneNumber);
+  final int retries;
+  AuthCodeSent(this.phoneNumber, {this.retries = 0});
+
+  @override
+  List<Object> get props => [phoneNumber, retries];
 } // => OTP input screen
 
 class AuthSuccess extends AuthState {}
