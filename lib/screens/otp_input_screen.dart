@@ -38,7 +38,7 @@ class _OtpInputScreenState extends State<OtpInputScreen> {
   void initState() {
     resendCode = TapGestureRecognizer()
       ..onTap = () {
-        // TODO: Implement resend-verification-code
+        widget._authBloc.add(RequestResendOtp());
       };
     errorController = StreamController<ErrorAnimationType>();
     super.initState();

@@ -17,14 +17,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   bool waitingForVerification = false;
   bool incorrectOtp = false;
   String _verificationId = "";
-  String phoneNumber;
+  String _phoneNumber;
   int _resendToken;
 
-  void addVerificationCompleteEvent(User user) {
+  void _addVerificationCompleteEvent(User user) {
     this.add(VerificationComplete(user));
   }
 
-  void onFail(String code) {
+  void _onFail(String code) {
     if (code == 'invalid-verification-code') {
       //? Use callback from otp_input_screen
       // Right now handled by null checking of `user` value
@@ -34,27 +34,27 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  void onVerificationComplete(credential) {
+  void _onVerificationComplete(credential) {
     _authRepo
-        .signInWithCredential(credential, onFail)
+        .signInWithCredential(credential, _onFail)
         .then((userCredential) =>
             _authRepo.userFromFirebaseUser(userCredential.user))
-        .then((user) => addVerificationCompleteEvent(user));
+        .then((user) => _addVerificationCompleteEvent(user));
   }
 
-  void onVerificationFail(FirebaseAuthException exception) {
+  void _onVerificationFail(FirebaseAuthException exception) {
     print("Auth failed");
     print(exception.code);
   }
 
-  void onCodeSent(String verificationId, int resendToken) {
+  void _onCodeSent(String verificationId, int resendToken) {
     print("Code has been sent.");
     isCodeSent = true;
     _verificationId = verificationId;
     _resendToken = resendToken;
   }
 
-  void onCodeAutoRetrievalTimeout(String verificationId) {
+  void _onCodeAutoRetrievalTimeout(String verificationId) {
     print("Timed out waiting for SMS");
     timedOut = true;
   }
@@ -75,14 +75,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         yield UserUnauthorized();
       }
     } else if (event is AuthSendOTP) {
-      yield AuthCodeSent(event.number);
+      _phoneNumber = event.number;
+      yield AuthCodeSent(_phoneNumber);
 
       _authRepo.verifyPhoneNumber(
         phoneNumber: event.number,
-        verificationCompleted: onVerificationComplete,
-        verificationFailed: onVerificationComplete,
-        codeAutoRetrievalTimeout: onCodeAutoRetrievalTimeout,
-        codeSent: onCodeSent,
+        verificationCompleted: _onVerificationComplete,
+        verificationFailed: _onVerificationFail,
+        codeAutoRetrievalTimeout: _onCodeAutoRetrievalTimeout,
+        codeSent: _onCodeSent,
       );
     } else if (event is EnterVerificationCode) {
       // Use this to show spinner within otp_input_screen
@@ -91,19 +92,28 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       var user = await _authRepo.signInWithSmsCode(
         event.smsCode,
         _verificationId,
-        onFail,
+        _onFail,
       );
 
       if (user == null) {
         print("Setting otp as incorrect");
         waitingForVerification = false;
         incorrectOtp = true;
-        yield AuthCodeSent(phoneNumber);
+        yield AuthCodeSent(_phoneNumber);
       } else {
         yield UserAuthorized(user);
       }
     } else if (event is VerificationComplete) {
       yield (UserAuthorized(event.user));
+    } else if (event is RequestResendOtp) {
+      _authRepo.verifyPhoneNumber(
+        phoneNumber: _phoneNumber,
+        verificationCompleted: _onVerificationComplete,
+        verificationFailed: _onVerificationFail,
+        codeAutoRetrievalTimeout: _onCodeAutoRetrievalTimeout,
+        codeSent: _onCodeSent,
+        forceResendingToken: _resendToken,
+      );
     }
   }
 }

@@ -27,3 +27,5 @@ class VerificationComplete extends AuthEvent {
   final User user;
   VerificationComplete(this.user);
 }
+
+class RequestResendOtp extends AuthEvent {}
