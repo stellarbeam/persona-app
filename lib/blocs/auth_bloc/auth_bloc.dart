@@ -104,7 +104,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         yield UserAuthorized(user);
       }
     } else if (event is VerificationComplete) {
-      yield (UserAuthorized(event.user));
+      yield ProfileCompletion(event.user);
     } else if (event is RequestResendOtp) {
       _authRepo.verifyPhoneNumber(
         phoneNumber: _phoneNumber,

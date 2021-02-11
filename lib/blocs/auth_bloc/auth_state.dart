@@ -9,8 +9,6 @@ abstract class AuthState extends Equatable {
 
 class AuthInitial extends AuthState {} // => Loading Screen
 
-// class AuthLoading extends AuthState {} // => Sending OTP
-
 class AuthCodeSent extends AuthState {
   final String phoneNumber;
   final int retries;
@@ -18,15 +16,16 @@ class AuthCodeSent extends AuthState {
 
   @override
   List<Object> get props => [phoneNumber, retries];
-} // => OTP input screen
+}
 
-class AuthSuccess extends AuthState {}
-
-class AuthFailure extends AuthState {}
-
-class UserUnauthorized extends AuthState {} // => Phone Input Screen
+class UserUnauthorized extends AuthState {}
 
 class UserAuthorized extends AuthState {
   final User user;
   UserAuthorized(this.user);
-} // => HomeScreen
+}
+
+class ProfileCompletion extends AuthState {
+  final User user;
+  ProfileCompletion(this.user);
+}

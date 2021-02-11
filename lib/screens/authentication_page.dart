@@ -5,6 +5,7 @@ import '../blocs/auth_bloc/auth_bloc.dart';
 
 import 'phone_input_screen.dart';
 import 'loading_screen.dart';
+import 'profile_completion_screen.dart';
 import 'otp_input_screen.dart';
 
 class AuthenticationPage extends StatefulWidget {
@@ -41,6 +42,8 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                 child: Text("Signed in"),
               ),
             );
+          } else if (state is ProfileCompletion) {
+            return ProfileCompletionScreen();
           } else {
             return Container();
           }
