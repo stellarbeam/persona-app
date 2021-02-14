@@ -101,7 +101,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         incorrectOtp = true;
         yield AuthCodeSent(_phoneNumber);
       } else {
-        yield UserAuthorized(user);
+        yield ProfileCompletion(user);
       }
     } else if (event is VerificationComplete) {
       yield ProfileCompletion(event.user);

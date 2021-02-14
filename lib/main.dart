@@ -32,7 +32,7 @@ class _MyAppState extends State<MyApp> {
       print("Firebase initialized.");
     } catch (e) {
       print('Error $e}');
-      //! ERROR: Could not connect to server
+      // _authBloc.add(ConnectionFailed());
     }
   }
 
