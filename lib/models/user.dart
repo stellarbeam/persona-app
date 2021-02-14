@@ -7,6 +7,8 @@ class User extends Equatable {
   final Role role;
   final String phoneNumber;
 
+  // TODO: All fields required.
+  // TODO: profile details must be bound to User model
   User({
     this.userId,
     this.userName,

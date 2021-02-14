@@ -114,6 +114,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         codeSent: _onCodeSent,
         forceResendingToken: _resendToken,
       );
+    } else if (event is SubmitProfileDetails) {
+      _authRepo.storeUserProfile(event.details);
+      yield (ProfileCompleted());
     }
   }
 }

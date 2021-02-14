@@ -135,4 +135,11 @@ class FirebaseAuthRepo {
       userName: user.displayName,
     );
   }
+
+  void storeUserProfile(Map<String, String> details) async {
+    User user = FirebaseAuth.instance.currentUser;
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+    await users.doc(user.uid).set(details);
+  }
 }

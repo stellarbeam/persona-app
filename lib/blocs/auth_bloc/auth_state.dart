@@ -7,7 +7,7 @@ abstract class AuthState extends Equatable {
   List<Object> get props => [];
 }
 
-class AuthInitial extends AuthState {} // => Loading Screen
+class AuthInitial extends AuthState {}
 
 class AuthCodeSent extends AuthState {
   final String phoneNumber;
@@ -29,3 +29,5 @@ class ProfileCompletion extends AuthState {
   final User user;
   ProfileCompletion(this.user);
 }
+
+class ProfileCompleted extends AuthState {}

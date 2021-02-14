@@ -7,12 +7,12 @@ abstract class AuthEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class FirebaseInitialized extends AuthEvent {}
+
 class AuthSendOTP extends AuthEvent {
   final String number;
   AuthSendOTP(this.number);
 }
-
-class FirebaseInitialized extends AuthEvent {}
 
 class AuthLogin extends AuthEvent {}
 
@@ -21,11 +21,15 @@ class EnterVerificationCode extends AuthEvent {
   EnterVerificationCode(this.smsCode);
 }
 
-class AuthChangeNumber extends AuthEvent {}
+class RequestResendOtp extends AuthEvent {}
 
 class VerificationComplete extends AuthEvent {
   final User user;
   VerificationComplete(this.user);
 }
 
-class RequestResendOtp extends AuthEvent {}
+class SubmitProfileDetails extends AuthEvent {
+  final Map<String, String> details;
+
+  SubmitProfileDetails(this.details);
+}

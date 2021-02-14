@@ -43,7 +43,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
               ),
             );
           } else if (state is ProfileCompletion) {
-            return ProfileCompletionScreen();
+            return ProfileCompletionScreen(_authBloc);
           } else {
             return Container();
           }
