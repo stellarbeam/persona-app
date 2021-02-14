@@ -128,11 +128,36 @@ class FirebaseAuthRepo {
     return null;
   }
 
-  models.User userFromFirebaseUser(User user) {
+  Future<models.User> userFromFirebaseUser(User user) async {
+    Role role;
+
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    var documentSnapshot = await users.doc(user.uid).get();
+
+    if (documentSnapshot.exists) {
+      var document = documentSnapshot.data();
+      switch (document['role']) {
+        case 'Admin':
+          role = Admin();
+          break;
+        case 'Boss':
+          role = Boss();
+          break;
+        case 'Employee':
+          role = Employee();
+          break;
+        default:
+          role = null;
+      }
+    } else {
+      print("No such document");
+    }
+
     return models.User(
       userId: user.uid,
-      phoneNumber: user.phoneNumber,
       userName: user.displayName,
+      role: role,
+      phoneNumber: user.phoneNumber,
     );
   }
 

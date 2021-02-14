@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'role.dart';
 
 class User extends Equatable {
@@ -10,10 +11,10 @@ class User extends Equatable {
   // TODO: All fields required.
   // TODO: profile details must be bound to User model
   User({
-    this.userId,
-    this.userName,
-    this.role,
-    this.phoneNumber,
+    @required this.userId,
+    @required this.userName,
+    @required this.role,
+    @required this.phoneNumber,
   });
 
   @override
