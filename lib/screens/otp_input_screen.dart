@@ -3,11 +3,10 @@ import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:persona/blocs/auth_bloc/auth_bloc.dart';
+import 'package:persona/widgets/gradient_button.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 import '../widgets/verification_code_form.dart';
-
-// TODO: Better UI and theme
 
 class OtpInputScreen extends StatefulWidget {
   final AuthBloc _authBloc;
@@ -50,9 +49,58 @@ class _OtpInputScreenState extends State<OtpInputScreen> {
     super.dispose();
   }
 
+  void _onSubmit() {
+    formKey.currentState.validate();
+    if (currentText.length != 6) {
+      errorController.add(ErrorAnimationType.shake);
+      setState(() {
+        hasError = true;
+      });
+    } else {
+      setState(() {
+        hasError = false;
+      });
+      widget._authBloc.add(EnterVerificationCode(currentText, _onIncorrectOtp));
+    }
+  }
+
+  void _onIncorrectOtp() {
+    errorController.add(ErrorAnimationType.shake);
+    setState(() {});
+  }
+
+  Widget _buildSubmitButton() {
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          GradientButton(
+            gradientColors: [
+              Color(0xFF00C2DC),
+              Color(0xFF0094FF),
+            ],
+            label: widget._authBloc.waitingForVerification
+                ? "Verifying"
+                : "Verify",
+            onPress: _onSubmit,
+            loading: widget._authBloc.waitingForVerification,
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xFF01CCB4), Color(0xFF006CEC)],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ),
       child: SafeArea(
         child: Column(
           children: <Widget>[
@@ -61,7 +109,11 @@ class _OtpInputScreenState extends State<OtpInputScreen> {
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Text(
                 'Phone Number Verification',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22,
+                ),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -77,13 +129,13 @@ class _OtpInputScreenState extends State<OtpInputScreen> {
                     TextSpan(
                       text: widget.phoneNumber,
                       style: TextStyle(
-                        color: Colors.black,
+                        color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 15,
                       ),
                     ),
                   ],
-                  style: TextStyle(color: Colors.black54, fontSize: 15),
+                  style: TextStyle(color: Colors.white, fontSize: 15),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -105,7 +157,10 @@ class _OtpInputScreenState extends State<OtpInputScreen> {
               textAlign: TextAlign.center,
               text: TextSpan(
                 text: "Didn't receive the code? ",
-                style: TextStyle(color: Colors.black54, fontSize: 15),
+                style: TextStyle(
+                  color: Colors.white54,
+                  fontSize: 15,
+                ),
                 children: [
                   TextSpan(
                     text: "RESEND",
@@ -122,50 +177,14 @@ class _OtpInputScreenState extends State<OtpInputScreen> {
             SizedBox(
               height: 14,
             ),
-            Container(
-              width: 200,
-              child: RaisedButton(
-                onPressed: () {
-                  formKey.currentState.validate();
-                  if (currentText.length != 6) {
-                    errorController.add(ErrorAnimationType.shake);
-                    setState(() {
-                      hasError = true;
-                    });
-                  } else {
-                    setState(() {
-                      hasError = false;
-                    });
-                    widget._authBloc.add(EnterVerificationCode(currentText));
-                  }
-                },
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text(
-                        widget._authBloc.waitingForVerification
-                            ? "Verifying"
-                            : "Verify",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      if (widget._authBloc.waitingForVerification)
-                        CircularProgressIndicator(),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            if (widget._authBloc.incorrectOtp)
-              Text(
-                'Incorrect OTP',
-                textAlign: TextAlign.center,
-              )
+            _buildSubmitButton(),
+            // SizedBox(height: 20),
+            // if (widget._authBloc.incorrectOtp)
+            //   Text(
+            //     'Incorrect OTP',
+            //     textAlign: TextAlign.center,
+            //     style: TextStyle(color: Colors.white),
+            //   ),
           ],
         ),
       ),

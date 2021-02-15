@@ -18,7 +18,8 @@ class AuthLogin extends AuthEvent {}
 
 class EnterVerificationCode extends AuthEvent {
   final String smsCode;
-  EnterVerificationCode(this.smsCode);
+  final Function onIncorrectOtp;
+  EnterVerificationCode(this.smsCode, this.onIncorrectOtp);
 }
 
 class RequestResendOtp extends AuthEvent {}

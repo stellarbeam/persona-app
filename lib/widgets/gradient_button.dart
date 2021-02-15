@@ -4,11 +4,13 @@ class GradientButton extends StatelessWidget {
   final List<Color> gradientColors;
   final String label;
   final Function onPress;
+  final bool loading;
 
   const GradientButton({
-    this.gradientColors,
-    this.label,
-    this.onPress,
+    @required this.gradientColors,
+    @required this.label,
+    @required this.onPress,
+    this.loading = false,
   });
 
   @override
@@ -31,12 +33,28 @@ class GradientButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(5),
         ),
         child: Center(
-          child: Text(
-            label,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-            ),
+          child: Row(
+            children: [
+              Text(
+                label,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                ),
+              ),
+              if (loading) ...[
+                SizedBox(width: 8),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                    ),
+                  ),
+                ),
+              ]
+            ],
           ),
         ),
       ),

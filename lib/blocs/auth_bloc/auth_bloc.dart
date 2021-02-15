@@ -88,6 +88,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } else if (event is EnterVerificationCode) {
       // Use this to show spinner within otp_input_screen
       waitingForVerification = true;
+      incorrectOtp = false;
 
       var user = await _authRepo.signInWithSmsCode(
         event.smsCode,
@@ -95,10 +96,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         _onFail,
       );
 
+      waitingForVerification = false;
+
       if (user == null) {
-        print("Setting otp as incorrect");
-        waitingForVerification = false;
         incorrectOtp = true;
+        event.onIncorrectOtp();
         yield AuthCodeSent(_phoneNumber);
       } else {
         yield ProfileCompletion(user);
