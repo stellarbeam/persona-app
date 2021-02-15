@@ -43,9 +43,10 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         title: 'Persona',
         theme: ThemeData(
-          primarySwatch: Colors.purple,
-          accentColor: Colors.purpleAccent,
+          primarySwatch: Colors.cyan,
+          accentColor: Colors.cyanAccent,
           visualDensity: VisualDensity.adaptivePlatformDensity,
+          cursorColor: Colors.white60,
         ),
         debugShowCheckedModeBanner: false,
         home: AuthenticationPage(),

@@ -20,23 +20,34 @@ class PhoneNumberForm extends StatelessWidget {
       child: Form(
         key: _formKey,
         child: IntlPhoneField(
+          dropDownArrowColor: Colors.white,
+          countryCodeTextColor: Colors.white,
+          dropdownDecoration: BoxDecoration(
+            color: Colors.white.withAlpha(40),
+            borderRadius: BorderRadius.circular(5),
+          ),
+          style: TextStyle(color: Colors.white),
+          showDropdownIcon: true,
           decoration: InputDecoration(
-            hintText: "Phone Number",
-            // labelText: "Phone Number",
-            labelStyle: TextStyle(
-              color: Colors.black,
-            ),
             enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.purple,
-                width: 1.5,
-              ),
+              borderRadius: BorderRadius.circular(5),
+              borderSide: BorderSide(color: Colors.transparent),
+            ),
+            hintText: "Phone Number",
+            hintStyle: TextStyle(
+              color: Colors.white.withAlpha(40),
+              fontSize: 16,
             ),
             focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.purple,
-              ),
+              borderRadius: BorderRadius.circular(5),
+              borderSide: BorderSide(color: Colors.transparent),
             ),
+            border: UnderlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
+              borderSide: BorderSide(color: Colors.transparent),
+            ),
+            filled: true,
+            fillColor: Colors.white.withAlpha(40),
           ),
           initialCountryCode: 'IN',
           onChanged: (phone) => _onPhoneChanged(phone),
