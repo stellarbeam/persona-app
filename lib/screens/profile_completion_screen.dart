@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:persona/blocs/auth_bloc/auth_bloc.dart';
-
 import '../models/role.dart';
+
+import '../blocs/auth_bloc/auth_bloc.dart';
+
+import '../widgets/gradient_button.dart';
+import '../widgets/radio_flat_button.dart';
 
 class ProfileCompletionScreen extends StatefulWidget {
   final AuthBloc _authBloc;
@@ -28,11 +31,43 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Column(
-        children: [
-          _buildRoleSelector(),
-          _buildForm(),
-        ],
+      height: MediaQuery.of(context).size.height,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Color(0xFF01CCB4),
+            Color(0xFF006CEC),
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ),
+      child: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(height: 50),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Text(
+                  'Complete your profile',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              SizedBox(height: 30),
+              _buildRoleSelector(),
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: _buildForm(),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -52,15 +87,14 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
       child: Row(
         children: roles.map((role) {
           return Expanded(
-            child: Row(
-              children: [
-                Radio(
-                  value: role,
-                  groupValue: _selectedRole,
-                  onChanged: _onRoleChanged,
-                ),
-                Text(role.name),
-              ],
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: RadioFlatButton<Role>(
+                label: role.name,
+                value: role,
+                groupValue: _selectedRole,
+                onChanged: _onRoleChanged,
+              ),
             ),
           );
         }).toList(),
@@ -79,6 +113,29 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
     }
   }
 
+  InputDecoration _inputDecoration(String label, IconData iconData) {
+    return InputDecoration(
+      hintText: label,
+      icon: Icon(
+        iconData,
+        color: Colors.white,
+      ),
+      hintStyle: TextStyle(
+        color: Colors.white.withAlpha(80),
+      ),
+      fillColor: Colors.white.withAlpha(40),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(5),
+        borderSide: BorderSide(color: Colors.transparent),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(5),
+        borderSide: BorderSide(color: Colors.transparent),
+      ),
+      filled: true,
+    );
+  }
+
   Form _buildAdminForm() {
     return Form(
       key: _formKey,
@@ -88,16 +145,19 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
           children: [
             TextFormField(
               controller: _nameController,
-              decoration: InputDecoration(labelText: 'Name'),
+              decoration: _inputDecoration('Name', Icons.person),
             ),
+            SizedBox(height: 10),
             TextFormField(
               controller: _workEmailController,
-              decoration: InputDecoration(labelText: 'Email'),
+              decoration: _inputDecoration('Email', Icons.email),
             ),
+            SizedBox(height: 10),
             TextFormField(
               controller: _tokenController,
-              decoration: InputDecoration(labelText: 'Unique Invite Token'),
+              decoration: _inputDecoration('Unique Invite Token', Icons.code),
             ),
+            SizedBox(height: 50),
             _buildSubmitButton(() {
               return {
                 'name': _nameController.text,
@@ -121,16 +181,19 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
           children: [
             TextFormField(
               controller: _nameController,
-              decoration: InputDecoration(labelText: 'Name'),
+              decoration: _inputDecoration('Name', Icons.person),
             ),
+            SizedBox(height: 10),
             TextFormField(
               controller: _workEmailController,
-              decoration: InputDecoration(labelText: 'Email'),
+              decoration: _inputDecoration('Email', Icons.email),
             ),
+            SizedBox(height: 10),
             TextFormField(
               controller: _deptController,
-              decoration: InputDecoration(labelText: 'Department'),
+              decoration: _inputDecoration('Department', Icons.domain),
             ),
+            SizedBox(height: 50),
             _buildSubmitButton(() {
               return {
                 'name': _nameController.text,
@@ -154,24 +217,29 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
           children: [
             TextFormField(
               controller: _nameController,
-              decoration: InputDecoration(labelText: 'Name'),
+              decoration: _inputDecoration('Name', Icons.person),
             ),
+            SizedBox(height: 10),
             TextFormField(
               controller: _workEmailController,
-              decoration: InputDecoration(labelText: 'Email'),
+              decoration: _inputDecoration('Email', Icons.email),
             ),
+            SizedBox(height: 10),
             TextFormField(
               controller: _deptController,
-              decoration: InputDecoration(labelText: 'Department'),
+              decoration: _inputDecoration('Department', Icons.domain),
             ),
+            SizedBox(height: 10),
             TextFormField(
               controller: _jobTitleController,
-              decoration: InputDecoration(labelText: 'Job Title'),
+              decoration: _inputDecoration('Job Title', Icons.engineering),
             ),
+            SizedBox(height: 10),
             TextFormField(
               controller: _branchController,
-              decoration: InputDecoration(labelText: 'Company Branch'),
+              decoration: _inputDecoration('Company Branch', Icons.location_on),
             ),
+            SizedBox(height: 50),
             _buildSubmitButton(() {
               return {
                 'name': _nameController.text,
@@ -189,17 +257,23 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
   }
 
   Widget _buildSubmitButton(Function getDetails) {
-    // TODO: Use a widget named FormButton
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: RaisedButton(
-        color: Theme.of(context).primaryColor,
-        textColor: Colors.white,
-        onPressed: () {
-          var details = getDetails();
-          _onSubmit(details);
-        },
-        child: Text('SUBMIT'),
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          GradientButton(
+            gradientColors: [
+              Color(0xFF00C2DC),
+              Color(0xFF0094FF),
+            ],
+            label: "Submit",
+            onPress: () {
+              var details = getDetails();
+              _onSubmit(details);
+            },
+          ),
+        ],
       ),
     );
   }
