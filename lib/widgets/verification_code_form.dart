@@ -1,7 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+
+import '../blocs/theme_bloc/theme_bloc.dart';
 
 class VerificationCodeForm extends StatelessWidget {
   const VerificationCodeForm({
@@ -28,41 +31,44 @@ class VerificationCodeForm extends StatelessWidget {
           vertical: 8.0,
           horizontal: 30,
         ),
-        child: PinCodeTextField(
-          appContext: context,
-          pastedTextStyle: TextStyle(
-            color: Colors.green.shade600,
-            fontWeight: FontWeight.bold,
-          ),
-          length: 6,
-          animationType: AnimationType.fade,
-          pinTheme: PinTheme(
-            selectedFillColor: Colors.transparent,
-            inactiveColor: Colors.white30,
-            shape: PinCodeFieldShape.box,
-            borderRadius: BorderRadius.circular(5),
-            fieldHeight: 50,
-            fieldWidth: 40,
-            activeColor: Colors.white.withAlpha(40),
-            activeFillColor: Colors.white.withAlpha(40),
-          ),
-          textStyle: TextStyle(
-            color: Colors.white,
-            // backgroundColor: Colors.white10,
-          ),
-          cursorColor: Colors.white,
-          animationDuration: Duration(milliseconds: 300),
-          backgroundColor: Colors.transparent,
-          // enableActiveFill: true,
-          errorAnimationController: errorController,
-          controller: textEditingController,
-          keyboardType: TextInputType.number,
-          onChanged: (value) {
-            print(value);
-            setCurrentText(value);
-          },
-          beforeTextPaste: (text) {
-            return true;
+        child: BlocBuilder<ThemeBloc, ThemeState>(
+          builder: (context, state) {
+            return PinCodeTextField(
+              appContext: context,
+              pastedTextStyle: TextStyle(
+                color: Colors.green.shade600,
+                fontWeight: FontWeight.bold,
+              ),
+              length: 6,
+              animationType: AnimationType.fade,
+              pinTheme: PinTheme(
+                shape: PinCodeFieldShape.box,
+                borderRadius: BorderRadius.circular(5),
+                fieldHeight: 50,
+                fieldWidth: 40,
+                selectedFillColor: state.themeData.pinSelectedFill,
+                inactiveColor: state.themeData.pinInactive,
+                activeColor: state.themeData.pinActive,
+                activeFillColor: state.themeData.pinActiveFill,
+              ),
+              textStyle: TextStyle(
+                color: state.themeData.formFieldText,
+              ),
+              cursorColor: state.themeData.formFieldText,
+              animationDuration: Duration(milliseconds: 300),
+              backgroundColor: Colors.transparent,
+              // enableActiveFill: true,
+              errorAnimationController: errorController,
+              controller: textEditingController,
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                print(value);
+                setCurrentText(value);
+              },
+              beforeTextPaste: (text) {
+                return true;
+              },
+            );
           },
         ),
       ),

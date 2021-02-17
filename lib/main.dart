@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'blocs/auth_bloc/auth_bloc.dart';
+import 'blocs/theme_bloc/theme_bloc.dart';
 import 'screens/authentication_page.dart';
 
 void main() {
@@ -38,8 +39,15 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: _authBloc,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(
+          value: _authBloc,
+        ),
+        BlocProvider(
+          create: (context) => ThemeBloc(),
+        ),
+      ],
       child: MaterialApp(
         title: 'Persona',
         theme: ThemeData(

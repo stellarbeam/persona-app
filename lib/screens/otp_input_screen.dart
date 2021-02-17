@@ -174,17 +174,8 @@ class _OtpInputScreenState extends State<OtpInputScreen> {
                 ],
               ),
             ),
-            SizedBox(
-              height: 14,
-            ),
+            SizedBox(height: 14),
             _buildSubmitButton(),
-            // SizedBox(height: 20),
-            // if (widget._authBloc.incorrectOtp)
-            //   Text(
-            //     'Incorrect OTP',
-            //     textAlign: TextAlign.center,
-            //     style: TextStyle(color: Colors.white),
-            //   ),
           ],
         ),
       ),
