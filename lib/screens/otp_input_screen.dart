@@ -10,6 +10,7 @@ import '../blocs/theme_bloc/theme_bloc.dart';
 
 import '../widgets/gradient_button.dart';
 import '../widgets/verification_code_form.dart';
+import '../widgets/theme_switcher_icon.dart';
 
 class OtpInputScreen extends StatefulWidget {
   final AuthBloc _authBloc;
@@ -108,86 +109,99 @@ class _OtpInputScreenState extends State<OtpInputScreen> {
             ),
           ),
           child: SafeArea(
-            child: Column(
-              children: <Widget>[
-                SizedBox(height: 100),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Text(
-                    'Phone Number Verification',
-                    style: TextStyle(
-                      color: state.themeData.helpText,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 30.0,
-                    vertical: 8,
-                  ),
-                  child: RichText(
-                    text: TextSpan(
-                      text: "Enter the code sent to ",
-                      children: [
-                        TextSpan(
-                          text: widget.phoneNumber,
-                          style: TextStyle(
-                            color: state.themeData.helpText,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
-                          ),
-                        ),
-                      ],
-                      style: TextStyle(
-                          color: state.themeData.helpText, fontSize: 15),
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                VerificationCodeForm(
-                  formKey: formKey,
-                  hasError: hasError,
-                  errorController: errorController,
-                  textEditingController: textEditingController,
-                  setCurrentText: setCurrentText,
-                ),
-                SizedBox(
-                  height: 50,
-                ),
-                RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    text: "Didn't receive the code? ",
-                    style: TextStyle(
-                      color: state.themeData.helpText,
-                      fontSize: 15,
-                    ),
-                    children: [
-                      TextSpan(
-                        text: "RESEND",
-                        recognizer: resendCode,
+            child: Stack(
+              children: [
+                _buildThemeSwitcherIcon(state, context),
+                Column(
+                  children: <Widget>[
+                    SizedBox(height: 70),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text(
+                        'Phone Number Verification',
                         style: TextStyle(
-                          color: state.themeData.helpTextHighlighted,
+                          color: state.themeData.helpText,
                           fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                          fontSize: 22,
                         ),
+                        textAlign: TextAlign.center,
                       ),
-                    ],
-                  ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30.0,
+                        vertical: 8,
+                      ),
+                      child: RichText(
+                        text: TextSpan(
+                          text: "Enter the code sent to ",
+                          children: [
+                            TextSpan(
+                              text: widget.phoneNumber,
+                              style: TextStyle(
+                                color: state.themeData.helpText,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ],
+                          style: TextStyle(
+                              color: state.themeData.helpText, fontSize: 15),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 100,
+                    ),
+                    VerificationCodeForm(
+                      formKey: formKey,
+                      hasError: hasError,
+                      errorController: errorController,
+                      textEditingController: textEditingController,
+                      setCurrentText: setCurrentText,
+                    ),
+                    SizedBox(
+                      height: 70,
+                    ),
+                    RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        text: "Didn't receive the code? ",
+                        style: TextStyle(
+                          color: state.themeData.helpText,
+                          fontSize: 15,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: "RESEND",
+                            recognizer: resendCode,
+                            style: TextStyle(
+                              color: state.themeData.helpTextHighlighted,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 14),
+                    _buildSubmitButton(),
+                  ],
                 ),
-                SizedBox(height: 14),
-                _buildSubmitButton(),
               ],
             ),
           ),
         );
       },
+    );
+  }
+
+  Positioned _buildThemeSwitcherIcon(ThemeState state, BuildContext context) {
+    return Positioned(
+      top: 12,
+      right: 12,
+      child: ThemeSwitcherIcon(state),
     );
   }
 }

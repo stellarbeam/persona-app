@@ -8,6 +8,7 @@ import '../blocs/theme_bloc/theme_bloc.dart';
 
 import '../widgets/gradient_button.dart';
 import '../widgets/radio_flat_button.dart';
+import '../widgets/theme_switcher_icon.dart';
 
 class ProfileCompletionScreen extends StatefulWidget {
   final AuthBloc _authBloc;
@@ -35,6 +36,7 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
     return BlocBuilder<ThemeBloc, ThemeState>(
       builder: (context, state) {
         return Container(
+          padding: MediaQuery.of(context).viewInsets,
           height: MediaQuery.of(context).size.height,
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -45,26 +47,31 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
           ),
           child: SafeArea(
             child: SingleChildScrollView(
-              child: Column(
+              child: Stack(
                 children: [
-                  SizedBox(height: 50),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Text(
-                      'Complete your profile',
-                      style: TextStyle(
-                        color: state.themeData.helpText,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
+                  _buildThemeSwitcherIcon(state, context),
+                  Column(
+                    children: [
+                      SizedBox(height: 50),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Text(
+                          'Complete your profile',
+                          style: TextStyle(
+                            color: state.themeData.helpText,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  SizedBox(height: 30),
-                  _buildRoleSelector(),
-                  Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: _buildForm(),
+                      SizedBox(height: 30),
+                      _buildRoleSelector(),
+                      Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: _buildForm(),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -72,6 +79,14 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
           ),
         );
       },
+    );
+  }
+
+  Positioned _buildThemeSwitcherIcon(ThemeState state, BuildContext context) {
+    return Positioned(
+      top: 12,
+      right: 12,
+      child: ThemeSwitcherIcon(state),
     );
   }
 

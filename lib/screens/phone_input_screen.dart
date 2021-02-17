@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_field/phone_number.dart';
-import 'package:persona/blocs/theme_bloc/theme_data.dart';
 
 import '../widgets/curve_clipper.dart';
 import '../widgets/phone_number_form.dart';
 import '../widgets/gradient_button.dart';
 import '../widgets/brand_label.dart';
+import '../widgets/theme_switcher_icon.dart';
 
 import '../blocs/auth_bloc/auth_bloc.dart';
 import '../blocs/theme_bloc/theme_bloc.dart';
@@ -203,20 +203,7 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
     return Positioned(
       top: 12,
       right: 12,
-      child: IconButton(
-        icon: Icon(
-          state.theme == AppTheme.Light
-              ? Icons.wb_sunny_outlined
-              : Icons.nightlight_round,
-          color: Colors.white,
-        ),
-        onPressed: () {
-          BlocProvider.of<ThemeBloc>(context).add(
-            ThemeChanged(
-                state.theme == AppTheme.Light ? AppTheme.Dark : AppTheme.Light),
-          );
-        },
-      ),
+      child: ThemeSwitcherIcon(state),
     );
   }
 }
