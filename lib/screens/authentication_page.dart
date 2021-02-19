@@ -45,6 +45,14 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
             );
           } else if (state is ProfileCompletion) {
             return ProfileCompletionScreen(_authBloc);
+          }
+          if (state is ProfileCompleted) {
+            return Container(
+              child: Center(
+                child: Text("Done. Onboarding here."),
+                // TODO: listen, and push onboarding route
+              ),
+            );
           } else {
             return Container(
               child: Center(

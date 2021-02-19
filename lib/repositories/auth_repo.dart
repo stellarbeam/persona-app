@@ -167,4 +167,6 @@ class FirebaseAuthRepo {
 
     await users.doc(user.uid).set(details);
   }
+
+  // TODO: Implememnt getUserProfile
 }

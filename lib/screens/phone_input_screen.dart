@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_field/phone_number.dart';
+import 'package:persona/localization/app_localization.dart';
+import 'package:persona/widgets/language_changer_icon.dart';
 
 import '../widgets/curve_clipper.dart';
 import '../widgets/phone_number_form.dart';
@@ -49,7 +51,8 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
         ..hideCurrentSnackBar()
         ..showSnackBar(
           SnackBar(
-            content: Text('Invalid phone number! Please try again.'),
+            content:
+                Text(AppLocalizations.of(context).translate('invalid_number')),
             duration: Duration(seconds: 1),
           ),
         );
@@ -78,6 +81,7 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
             child: Stack(
               children: [
                 _buildThemeSwitcherIcon(state, context),
+                _buildLanguageChangerIcon(),
                 _buildClippedBackground(paddingDistance, curvedDistance),
                 Positioned(
                   child: BrandLabel(paddingDistance + curvedDistance),
@@ -95,6 +99,14 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
           ),
         );
       },
+    );
+  }
+
+  Positioned _buildLanguageChangerIcon() {
+    return Positioned(
+      top: 12,
+      right: 50,
+      child: LanguageSwitcherIcon(),
     );
   }
 
@@ -133,7 +145,7 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
             children: [
               GradientButton(
                 gradientColors: state.themeData.buttonGradient,
-                label: "Submit",
+                label: AppLocalizations.of(context).translate('next'),
                 onPress: _onSubmit,
               ),
             ],
@@ -150,6 +162,7 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
     double paddingDistance,
     double curvedDistance,
   ) {
+    final _appLocalizations = AppLocalizations.of(context);
     return Positioned(
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -159,7 +172,7 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
           children: [
             SizedBox(height: 30),
             Text(
-              'Welcome, user!',
+              _appLocalizations.translate('welcome'),
               style: TextStyle(
                 color: state.themeData.helpText,
                 fontSize: 30,
@@ -168,7 +181,7 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
             ),
             SizedBox(height: 15),
             Text(
-              "Let's verify you.",
+              _appLocalizations.translate('verify_headline'),
               style: TextStyle(
                 color: state.themeData.helpText,
                 fontSize: 20,
@@ -181,7 +194,7 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                'This will help us confirm your idenity and secure your account.',
+                _appLocalizations.translate('verify_info'),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: state.themeData.helpText,

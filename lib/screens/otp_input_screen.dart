@@ -11,6 +11,9 @@ import '../blocs/theme_bloc/theme_bloc.dart';
 import '../widgets/gradient_button.dart';
 import '../widgets/verification_code_form.dart';
 import '../widgets/theme_switcher_icon.dart';
+import '../widgets/language_changer_icon.dart';
+
+import '../localization/app_localization.dart';
 
 class OtpInputScreen extends StatefulWidget {
   final AuthBloc _authBloc;
@@ -84,8 +87,8 @@ class _OtpInputScreenState extends State<OtpInputScreen> {
               return GradientButton(
                 gradientColors: state.themeData.buttonGradient,
                 label: widget._authBloc.waitingForVerification
-                    ? "Verifying"
-                    : "Verify",
+                    ? AppLocalizations.of(context).translate('verifying')
+                    : AppLocalizations.of(context).translate('verify'),
                 onPress: _onSubmit,
                 loading: widget._authBloc.waitingForVerification,
               );
@@ -98,6 +101,7 @@ class _OtpInputScreenState extends State<OtpInputScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final _appLocalizations = AppLocalizations.of(context);
     return BlocBuilder<ThemeBloc, ThemeState>(
       builder: (context, state) {
         return Container(
@@ -112,13 +116,14 @@ class _OtpInputScreenState extends State<OtpInputScreen> {
             child: Stack(
               children: [
                 _buildThemeSwitcherIcon(state, context),
+                _buildLanguageChangerIcon(),
                 Column(
                   children: <Widget>[
                     SizedBox(height: 70),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Text(
-                        'Phone Number Verification',
+                        _appLocalizations.translate('phone_verification_title'),
                         style: TextStyle(
                           color: state.themeData.helpText,
                           fontWeight: FontWeight.bold,
@@ -134,7 +139,7 @@ class _OtpInputScreenState extends State<OtpInputScreen> {
                       ),
                       child: RichText(
                         text: TextSpan(
-                          text: "Enter the code sent to ",
+                          text: _appLocalizations.translate('enter_code'),
                           children: [
                             TextSpan(
                               text: widget.phoneNumber,
@@ -167,14 +172,14 @@ class _OtpInputScreenState extends State<OtpInputScreen> {
                     RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(
-                        text: "Didn't receive the code? ",
+                        text: _appLocalizations.translate('did_not_receive'),
                         style: TextStyle(
                           color: state.themeData.helpText,
                           fontSize: 15,
                         ),
                         children: [
                           TextSpan(
-                            text: "RESEND",
+                            text: _appLocalizations.translate('resend'),
                             recognizer: resendCode,
                             style: TextStyle(
                               color: state.themeData.helpTextHighlighted,
@@ -194,6 +199,14 @@ class _OtpInputScreenState extends State<OtpInputScreen> {
           ),
         );
       },
+    );
+  }
+
+  Positioned _buildLanguageChangerIcon() {
+    return Positioned(
+      top: 12,
+      right: 50,
+      child: LanguageSwitcherIcon(),
     );
   }
 

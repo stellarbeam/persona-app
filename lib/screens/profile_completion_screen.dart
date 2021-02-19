@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:persona/localization/app_localization.dart';
+import 'package:persona/widgets/language_changer_icon.dart';
 
 import '../models/role.dart';
 
@@ -35,6 +37,7 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<ThemeBloc, ThemeState>(
       builder: (context, state) {
+        final _appLocalizations = AppLocalizations.of(context);
         return Container(
           padding: MediaQuery.of(context).viewInsets,
           height: MediaQuery.of(context).size.height,
@@ -50,13 +53,14 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
               child: Stack(
                 children: [
                   _buildThemeSwitcherIcon(state, context),
+                  _buildLanguageChangerIcon(),
                   Column(
                     children: [
-                      SizedBox(height: 50),
+                      SizedBox(height: 60),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: Text(
-                          'Complete your profile',
+                          _appLocalizations.translate('complete_profile'),
                           style: TextStyle(
                             color: state.themeData.helpText,
                             fontWeight: FontWeight.bold,
@@ -79,6 +83,14 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
           ),
         );
       },
+    );
+  }
+
+  Positioned _buildLanguageChangerIcon() {
+    return Positioned(
+      top: 12,
+      right: 50,
+      child: LanguageSwitcherIcon(),
     );
   }
 
@@ -108,7 +120,7 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: RadioFlatButton<Role>(
-                label: role.name,
+                label: AppLocalizations.of(context).translate(role.name),
                 value: role,
                 groupValue: _selectedRole,
                 onChanged: _onRoleChanged,
@@ -121,15 +133,16 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
   }
 
   Widget _buildForm() {
+    final _appLocaliztions = AppLocalizations.of(context);
     return BlocBuilder<ThemeBloc, ThemeState>(
       builder: (context, state) {
         if (_selectedRole is Admin) {
-          return _buildAdminForm(state);
+          return _buildAdminForm(state, _appLocaliztions);
         } else if (_selectedRole is Boss) {
-          return _buildBossForm(state);
+          return _buildBossForm(state, _appLocaliztions);
         } else {
           // _selectedRole is Employee
-          return _buildEmployeeForm(state);
+          return _buildEmployeeForm(state, _appLocaliztions);
         }
       },
     );
@@ -159,7 +172,7 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
     );
   }
 
-  Form _buildAdminForm(ThemeState state) {
+  Form _buildAdminForm(ThemeState state, AppLocalizations appLocalizations) {
     return Form(
       key: _formKey,
       child: Padding(
@@ -167,19 +180,33 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
         child: Column(
           children: [
             TextFormField(
+              style: TextStyle(color: state.themeData.formFieldText),
               controller: _nameController,
-              decoration: _inputDecoration('Name', Icons.person, state),
+              decoration: _inputDecoration(
+                appLocalizations.translate('name'),
+                Icons.person,
+                state,
+              ),
             ),
             SizedBox(height: 10),
             TextFormField(
+              style: TextStyle(color: state.themeData.formFieldText),
               controller: _workEmailController,
-              decoration: _inputDecoration('Email', Icons.email, state),
+              decoration: _inputDecoration(
+                appLocalizations.translate('email'),
+                Icons.email,
+                state,
+              ),
             ),
             SizedBox(height: 10),
             TextFormField(
+              style: TextStyle(color: state.themeData.formFieldText),
               controller: _tokenController,
-              decoration:
-                  _inputDecoration('Unique Invite Token', Icons.code, state),
+              decoration: _inputDecoration(
+                appLocalizations.translate('token'),
+                Icons.code,
+                state,
+              ),
             ),
             SizedBox(height: 50),
             _buildSubmitButton(() {
@@ -196,7 +223,7 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
     );
   }
 
-  Form _buildBossForm(ThemeState state) {
+  Form _buildBossForm(ThemeState state, AppLocalizations appLocalizations) {
     return Form(
       key: _formKey,
       child: Padding(
@@ -204,18 +231,33 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
         child: Column(
           children: [
             TextFormField(
+              style: TextStyle(color: state.themeData.formFieldText),
               controller: _nameController,
-              decoration: _inputDecoration('Name', Icons.person, state),
+              decoration: _inputDecoration(
+                appLocalizations.translate('name'),
+                Icons.person,
+                state,
+              ),
             ),
             SizedBox(height: 10),
             TextFormField(
+              style: TextStyle(color: state.themeData.formFieldText),
               controller: _workEmailController,
-              decoration: _inputDecoration('Email', Icons.email, state),
+              decoration: _inputDecoration(
+                appLocalizations.translate('email'),
+                Icons.email,
+                state,
+              ),
             ),
             SizedBox(height: 10),
             TextFormField(
+              style: TextStyle(color: state.themeData.formFieldText),
               controller: _deptController,
-              decoration: _inputDecoration('Department', Icons.domain, state),
+              decoration: _inputDecoration(
+                appLocalizations.translate('department'),
+                Icons.domain,
+                state,
+              ),
             ),
             SizedBox(height: 50),
             _buildSubmitButton(() {
@@ -232,7 +274,7 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
     );
   }
 
-  Form _buildEmployeeForm(ThemeState state) {
+  Form _buildEmployeeForm(ThemeState state, AppLocalizations appLocalizations) {
     return Form(
       key: _formKey,
       child: Padding(
@@ -240,30 +282,53 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
         child: Column(
           children: [
             TextFormField(
+              style: TextStyle(color: state.themeData.formFieldText),
               controller: _nameController,
-              decoration: _inputDecoration('Name', Icons.person, state),
+              decoration: _inputDecoration(
+                appLocalizations.translate('name'),
+                Icons.person,
+                state,
+              ),
             ),
             SizedBox(height: 10),
             TextFormField(
+              style: TextStyle(color: state.themeData.formFieldText),
               controller: _workEmailController,
-              decoration: _inputDecoration('Email', Icons.email, state),
+              decoration: _inputDecoration(
+                appLocalizations.translate('email'),
+                Icons.email,
+                state,
+              ),
             ),
             SizedBox(height: 10),
             TextFormField(
+              style: TextStyle(color: state.themeData.formFieldText),
               controller: _deptController,
-              decoration: _inputDecoration('Department', Icons.domain, state),
+              decoration: _inputDecoration(
+                appLocalizations.translate('department'),
+                Icons.domain,
+                state,
+              ),
             ),
             SizedBox(height: 10),
             TextFormField(
+              style: TextStyle(color: state.themeData.formFieldText),
               controller: _jobTitleController,
-              decoration:
-                  _inputDecoration('Job Title', Icons.engineering, state),
+              decoration: _inputDecoration(
+                appLocalizations.translate('job_title'),
+                Icons.engineering,
+                state,
+              ),
             ),
             SizedBox(height: 10),
             TextFormField(
+              style: TextStyle(color: state.themeData.formFieldText),
               controller: _branchController,
-              decoration:
-                  _inputDecoration('Company Branch', Icons.location_on, state),
+              decoration: _inputDecoration(
+                appLocalizations.translate('branch'),
+                Icons.location_on,
+                state,
+              ),
             ),
             SizedBox(height: 50),
             _buildSubmitButton(() {
@@ -292,7 +357,7 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
             builder: (context, state) {
               return GradientButton(
                 gradientColors: state.themeData.buttonGradient,
-                label: "Submit",
+                label: AppLocalizations.of(context).translate('submit'),
                 onPress: () {
                   var details = getDetails();
                   _onSubmit(details);

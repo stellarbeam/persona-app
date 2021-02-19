@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
 import 'package:intl_phone_field/phone_number.dart';
+import 'package:persona/localization/app_localization.dart';
 import '../blocs/theme_bloc/theme_bloc.dart';
 
 class PhoneNumberForm extends StatelessWidget {
@@ -31,29 +32,11 @@ class PhoneNumberForm extends StatelessWidget {
                 color: state.themeData.formFieldFill,
                 borderRadius: BorderRadius.circular(5),
               ),
-              style: TextStyle(color: state.themeData.formFieldText),
-              showDropdownIcon: true,
-              decoration: InputDecoration(
-                enabledBorder: UnderlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                  borderSide: BorderSide(color: Colors.transparent),
-                ),
-                hintText: "Phone Number",
-                hintStyle: TextStyle(
-                  color: state.themeData.formFieldHintText,
-                  fontSize: 16,
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                  borderSide: BorderSide(color: Colors.transparent),
-                ),
-                border: UnderlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                  borderSide: BorderSide(color: Colors.transparent),
-                ),
-                filled: true,
-                fillColor: state.themeData.formFieldFill,
+              style: TextStyle(
+                color: state.themeData.formFieldText,
               ),
+              showDropdownIcon: true,
+              decoration: _buildPhoneFieldDecoration(context, state),
               initialCountryCode: 'IN',
               onChanged: (phone) => _onPhoneChanged(phone),
               autoValidate: false,
@@ -62,6 +45,33 @@ class PhoneNumberForm extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  InputDecoration _buildPhoneFieldDecoration(
+    BuildContext context,
+    ThemeState state,
+  ) {
+    return InputDecoration(
+      enabledBorder: UnderlineInputBorder(
+        borderRadius: BorderRadius.circular(5),
+        borderSide: BorderSide(color: Colors.transparent),
+      ),
+      hintText: AppLocalizations.of(context).translate('phone_number'),
+      hintStyle: TextStyle(
+        color: state.themeData.formFieldHintText,
+        fontSize: 16,
+      ),
+      focusedBorder: UnderlineInputBorder(
+        borderRadius: BorderRadius.circular(5),
+        borderSide: BorderSide(color: Colors.transparent),
+      ),
+      border: UnderlineInputBorder(
+        borderRadius: BorderRadius.circular(5),
+        borderSide: BorderSide(color: Colors.transparent),
+      ),
+      filled: true,
+      fillColor: state.themeData.formFieldFill,
     );
   }
 }
