@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:persona/models/onboarding_page.dart';
+import 'package:persona/screens/onboarding_screen.dart';
 
 import 'blocs/auth_bloc/auth_bloc.dart';
 import 'blocs/lang_bloc/lang_bloc.dart';
@@ -76,6 +78,9 @@ class _MyAppState extends State<MyApp> {
                 LangBloc.supportedLanguages.map((lang) => lang.locale),
             localeResolutionCallback: _localeResolutionCallback,
             home: AuthenticationPage(),
+            routes: {
+              OnboardingScreen.routeName: (_) => OnboardingScreen(),
+            },
           );
         },
       ),

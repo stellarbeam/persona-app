@@ -3,10 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/auth_bloc/auth_bloc.dart';
 
-import 'phone_input_screen.dart';
 import 'loading_screen.dart';
-import 'profile_completion_screen.dart';
+import 'phone_input_screen.dart';
 import 'otp_input_screen.dart';
+import 'profile_completion_screen.dart';
+import 'onboarding_screen.dart';
 
 class AuthenticationPage extends StatefulWidget {
   static const routeName = '/sign-in';
@@ -29,7 +30,13 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: BlocBuilder<AuthBloc, AuthState>(
+      body: BlocConsumer<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is ProfileCompleted) {
+            Navigator.of(context)
+                .pushReplacementNamed(OnboardingScreen.routeName);
+          }
+        },
         builder: (context, state) {
           if (state is AuthInitial) {
             return LoadingScreen();
@@ -45,14 +52,6 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
             );
           } else if (state is ProfileCompletion) {
             return ProfileCompletionScreen(_authBloc);
-          }
-          if (state is ProfileCompleted) {
-            return Container(
-              child: Center(
-                child: Text("Done. Onboarding here."),
-                // TODO: listen, and push onboarding route
-              ),
-            );
           } else {
             return Container(
               child: Center(
