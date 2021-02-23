@@ -168,7 +168,7 @@ class FirebaseAuthRepo {
     await users.doc(user.uid).set(details);
   }
 
-  Future<Map<String, String>> getUserProfile() async {
+  Future<Map<String, dynamic>> getUserProfile() async {
     User user = FirebaseAuth.instance.currentUser;
     CollectionReference users = FirebaseFirestore.instance.collection('users');
 

@@ -70,8 +70,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (event is FirebaseInitialized) {
       if (_authRepo.isAuthenticated()) {
         final user = await _authRepo.getUser();
-        // TODO: redirect to profile completion if profile incomplete
-        yield UserAuthorized(user);
+        final profileData = await _authRepo.getUserProfile();
+        if (profileData == null || profileData['name'] == null) {
+          yield UserAuthorized(user);
+        } else {
+          yield ProfileCompletion(user);
+        }
       } else {
         yield UserUnauthorized();
       }
