@@ -4,7 +4,6 @@ abstract class Role extends Equatable {
   String get name;
 
   @override
-  // TODO: Add unit test to check equatability of roles
   List<Object> get props => [name];
 }
 
