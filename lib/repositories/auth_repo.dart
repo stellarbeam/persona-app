@@ -168,5 +168,16 @@ class FirebaseAuthRepo {
     await users.doc(user.uid).set(details);
   }
 
-  // TODO: Implememnt getUserProfile
+  Future<Map<String, String>> getUserProfile() async {
+    User user = FirebaseAuth.instance.currentUser;
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+    var documentSnapshot = await users.doc(user.uid).get();
+
+    if (documentSnapshot != null) {
+      return documentSnapshot.data();
+    } else {
+      return null;
+    }
+  }
 }
