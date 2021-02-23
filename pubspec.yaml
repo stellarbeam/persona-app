@@ -24,7 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_localizations:
-    sdk: flutter        
+    sdk: flutter
   cloud_firestore: ^0.16.0
   cupertino_icons: ^1.0.0
   equatable: ^1.2.5
@@ -32,6 +32,7 @@ dependencies:
   firebase_core: ^0.7.0
   flutter_bloc: ^6.1.1
   intl_phone_field: ^1.4.2
+  lottie: ^0.7.0+1
   pin_code_fields: ^6.1.0
 
 dev_dependencies:
@@ -46,10 +47,9 @@ flutter:
   uses-material-design: true
 
   assets:
-    # language map json files
     - assets/lang/
-
     - assets/images/
+    - assets/lottie/
 
   fonts:
     - family: Pacifico
@@ -61,4 +61,3 @@ flutter:
     - family: Poppins
       fonts:
         - asset: assets/fonts/Poppins-Regular.ttf
-

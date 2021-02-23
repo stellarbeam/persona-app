@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/auth_bloc/auth_bloc.dart';
+import '../blocs/theme_bloc/theme_bloc.dart';
 
 import 'loading_screen.dart';
 import 'phone_input_screen.dart';
@@ -53,10 +54,17 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
           } else if (state is ProfileCompletion) {
             return ProfileCompletionScreen(_authBloc);
           } else {
-            return Container(
-              child: Center(
-                child: Text("Unknown"),
-              ),
+            return BlocBuilder<ThemeBloc, ThemeState>(
+              builder: (context, state) {
+                return Container(
+                    decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: state.themeData.backgroundGradient,
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ));
+              },
             );
           }
         },
