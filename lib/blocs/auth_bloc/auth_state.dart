@@ -31,3 +31,5 @@ class ProfileCompletion extends AuthState {
 }
 
 class ProfileCompleted extends AuthState {}
+
+class NoConnectivity extends AuthState {}

@@ -69,7 +69,7 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const paddingDistance = 80.0;
+    double paddingDistance = MediaQuery.of(context).size.height * 0.10;
     const curvedDistance = 80.0;
 
     return BlocBuilder<ThemeBloc, ThemeState>(
@@ -80,17 +80,17 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
           child: SafeArea(
             child: Stack(
               children: [
-                _buildThemeSwitcherIcon(state, context),
+                _buildThemeSwitcherIcon(),
                 _buildLanguageChangerIcon(),
                 _buildClippedBackground(paddingDistance, curvedDistance),
                 Positioned(
-                  child: BrandLabel(paddingDistance + curvedDistance),
+                  child: BrandLabel(
+                      paddingDistance + curvedDistance), // 10% height
                   top: 0,
                 ),
                 _buildMainView(
                   context,
                   state,
-                  _buildSubmitButton,
                   paddingDistance,
                   curvedDistance,
                 ),
@@ -158,7 +158,6 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
   Positioned _buildMainView(
     BuildContext context,
     ThemeState state,
-    Widget _buildSubmitButton(),
     double paddingDistance,
     double curvedDistance,
   ) {
@@ -166,44 +165,13 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
     return Positioned(
       child: Container(
         width: MediaQuery.of(context).size.width,
-        padding: const EdgeInsets.all(15),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 30),
-            Text(
-              _appLocalizations.translate('welcome'),
-              style: TextStyle(
-                color: state.themeData.helpText,
-                fontSize: 30,
-                fontFamily: 'Poppins',
-              ),
-            ),
-            SizedBox(height: 15),
-            Text(
-              _appLocalizations.translate('verify_headline'),
-              style: TextStyle(
-                color: state.themeData.helpText,
-                fontSize: 20,
-                fontFamily: 'Poppins',
-              ),
-            ),
-            const SizedBox(height: 40),
-            PhoneNumberForm(_formKey, _validator, _onPhoneChanged),
-            const SizedBox(height: 30),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Text(
-                _appLocalizations.translate('verify_info'),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: state.themeData.helpText,
-                  fontSize: 12,
-                  fontFamily: 'Poppins',
-                ),
-              ),
-            ),
-            const SizedBox(height: 40),
+            _buildMainText(_appLocalizations, state), // 30% height
+            _buildPhoneNumberForm(context), // 20% height
+            _buildSupplementaryText(_appLocalizations, state), // 10% height
             _buildSubmitButton(),
           ],
         ),
@@ -212,11 +180,67 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
     );
   }
 
-  Positioned _buildThemeSwitcherIcon(ThemeState state, BuildContext context) {
+  Container _buildPhoneNumberForm(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.18,
+      child: PhoneNumberForm(
+        _formKey,
+        _validator,
+        _onPhoneChanged,
+      ),
+    );
+  }
+
+  Widget _buildMainText(AppLocalizations appLocalizations, ThemeState state) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.30,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            appLocalizations.translate('welcome'),
+            style: TextStyle(
+              color: state.themeData.helpText,
+              fontSize: 30,
+              fontFamily: 'Poppins',
+            ),
+          ),
+          SizedBox(height: 15),
+          Text(
+            appLocalizations.translate('verify_headline'),
+            style: TextStyle(
+              color: state.themeData.helpText,
+              fontSize: 20,
+              fontFamily: 'Poppins',
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSupplementaryText(
+      AppLocalizations appLocalizations, ThemeState state) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.10,
+      child: Text(
+        appLocalizations.translate('verify_info'),
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: state.themeData.helpText,
+          fontSize: 12,
+          fontFamily: 'Poppins',
+        ),
+      ),
+      // padding: EdgeInsets.symmetric(horizontal: 10, vertical: 35),
+    );
+  }
+
+  Positioned _buildThemeSwitcherIcon() {
     return Positioned(
       top: 12,
       right: 12,
-      child: ThemeSwitcherIcon(state),
+      child: ThemeSwitcherIcon(),
     );
   }
 }

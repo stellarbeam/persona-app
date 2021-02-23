@@ -45,6 +45,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   void _onVerificationFail(FirebaseAuthException exception) {
     print("Auth failed");
     print(exception.code);
+    this.add(AuthConnectionError());
   }
 
   void _onCodeSent(String verificationId, int resendToken) {
@@ -123,7 +124,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       );
     } else if (event is SubmitProfileDetails) {
       _authRepo.storeUserProfile(event.details);
-      yield (ProfileCompleted());
+      yield ProfileCompleted();
+    } else if (event is AuthConnectionError) {
+      yield NoConnectivity();
     }
   }
 }

@@ -14,8 +14,6 @@ class AuthSendOTP extends AuthEvent {
   AuthSendOTP(this.number);
 }
 
-class AuthLogin extends AuthEvent {}
-
 class EnterVerificationCode extends AuthEvent {
   final String smsCode;
   final Function onIncorrectOtp;
@@ -34,3 +32,5 @@ class SubmitProfileDetails extends AuthEvent {
 
   SubmitProfileDetails(this.details);
 }
+
+class AuthConnectionError extends AuthEvent {}

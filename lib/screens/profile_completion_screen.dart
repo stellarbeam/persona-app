@@ -98,7 +98,7 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
     return Positioned(
       top: 12,
       right: 12,
-      child: ThemeSwitcherIcon(state),
+      child: ThemeSwitcherIcon(),
     );
   }
 

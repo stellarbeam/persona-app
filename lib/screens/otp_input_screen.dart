@@ -119,77 +119,10 @@ class _OtpInputScreenState extends State<OtpInputScreen> {
                 _buildLanguageChangerIcon(),
                 Column(
                   children: <Widget>[
-                    SizedBox(height: 70),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Text(
-                        _appLocalizations.translate('phone_verification_title'),
-                        style: TextStyle(
-                          color: state.themeData.helpText,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 22,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 30.0,
-                        vertical: 8,
-                      ),
-                      child: RichText(
-                        text: TextSpan(
-                          text: _appLocalizations.translate('enter_code'),
-                          children: [
-                            TextSpan(
-                              text: widget.phoneNumber,
-                              style: TextStyle(
-                                color: state.themeData.helpText,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
-                              ),
-                            ),
-                          ],
-                          style: TextStyle(
-                              color: state.themeData.helpText, fontSize: 15),
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 100,
-                    ),
-                    VerificationCodeForm(
-                      formKey: formKey,
-                      hasError: hasError,
-                      errorController: errorController,
-                      textEditingController: textEditingController,
-                      setCurrentText: setCurrentText,
-                    ),
-                    SizedBox(
-                      height: 70,
-                    ),
-                    RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                        text: _appLocalizations.translate('did_not_receive'),
-                        style: TextStyle(
-                          color: state.themeData.helpText,
-                          fontSize: 15,
-                        ),
-                        children: [
-                          TextSpan(
-                            text: _appLocalizations.translate('resend'),
-                            recognizer: resendCode,
-                            style: TextStyle(
-                              color: state.themeData.helpTextHighlighted,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    _buildTitle(_appLocalizations, state),
+                    _buildSubtitle(_appLocalizations, state),
+                    _buildOtpField(),
+                    _buildHelpText(_appLocalizations, state),
                     SizedBox(height: 14),
                     _buildSubmitButton(),
                   ],
@@ -199,6 +132,91 @@ class _OtpInputScreenState extends State<OtpInputScreen> {
           ),
         );
       },
+    );
+  }
+
+  RichText _buildHelpText(
+    AppLocalizations _appLocalizations,
+    ThemeState state,
+  ) {
+    return RichText(
+      textAlign: TextAlign.center,
+      text: TextSpan(
+        text: _appLocalizations.translate('did_not_receive'),
+        style: TextStyle(
+          color: state.themeData.helpText,
+          fontSize: 15,
+        ),
+        children: [
+          TextSpan(
+            text: _appLocalizations.translate('resend'),
+            recognizer: resendCode,
+            style: TextStyle(
+              color: state.themeData.helpTextHighlighted,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOtpField() {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.35,
+      child: VerificationCodeForm(
+        formKey: formKey,
+        hasError: hasError,
+        errorController: errorController,
+        textEditingController: textEditingController,
+        setCurrentText: setCurrentText,
+      ),
+    );
+  }
+
+  Widget _buildSubtitle(AppLocalizations _appLocalizations, ThemeState state) {
+    return Container(
+      alignment: Alignment.center,
+      height: MediaQuery.of(context).size.height * 0.10,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 30.0,
+        vertical: 8,
+      ),
+      child: RichText(
+        text: TextSpan(
+          text: _appLocalizations.translate('enter_code'),
+          children: [
+            TextSpan(
+              text: widget.phoneNumber,
+              style: TextStyle(
+                color: state.themeData.helpText,
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+              ),
+            ),
+          ],
+          style: TextStyle(color: state.themeData.helpText, fontSize: 15),
+        ),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  Widget _buildTitle(AppLocalizations _appLocalizations, ThemeState state) {
+    return Container(
+      alignment: Alignment.center,
+      height: MediaQuery.of(context).size.height * 0.30,
+      padding: const EdgeInsets.only(top: 40),
+      child: Text(
+        _appLocalizations.translate('phone_verification_title'),
+        style: TextStyle(
+          color: state.themeData.helpText,
+          fontWeight: FontWeight.bold,
+          fontSize: 22,
+        ),
+        textAlign: TextAlign.center,
+      ),
     );
   }
 
@@ -214,7 +232,7 @@ class _OtpInputScreenState extends State<OtpInputScreen> {
     return Positioned(
       top: 12,
       right: 12,
-      child: ThemeSwitcherIcon(state),
+      child: ThemeSwitcherIcon(),
     );
   }
 }
