@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_field/phone_number.dart';
-import 'package:persona/localization/app_localization.dart';
-import 'package:persona/widgets/language_changer_icon.dart';
 
+import '../localization/app_localization.dart';
+
+import '../widgets/language_changer_icon.dart';
 import '../widgets/curve_clipper.dart';
 import '../widgets/phone_number_form.dart';
 import '../widgets/gradient_button.dart';
