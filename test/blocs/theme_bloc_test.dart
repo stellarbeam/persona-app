@@ -18,14 +18,18 @@ main() {
       expect(themeBloc.state, ThemeState(AppTheme.Light));
     });
 
-    blocTest('theme should be set to AppTheme.Dark upon calling themeBloc.',
-        build: () => themeBloc,
-        act: (ThemeBloc bloc) => bloc.add(ThemeChanged(AppTheme.Dark)),
-        expect: [ThemeState(AppTheme.Dark)]);
+    blocTest(
+      'theme should be set to AppTheme.Dark upon sending ThemeChanged(AppTheme.Dark) event',
+      build: () => themeBloc,
+      act: (ThemeBloc bloc) => bloc.add(ThemeChanged(AppTheme.Dark)),
+      expect: [ThemeState(AppTheme.Dark)],
+    );
 
-    blocTest('theme should be set to AppThemeLight upon calling themeBloc.',
-        build: () => themeBloc,
-        act: (ThemeBloc bloc) => bloc.add(ThemeChanged(AppTheme.Light)),
-        expect: [ThemeState(AppTheme.Light)]);
+    blocTest(
+      'theme should be set to AppThemeLight upon sending ThemeChanged(AppTheme.Light) event',
+      build: () => themeBloc,
+      act: (ThemeBloc bloc) => bloc.add(ThemeChanged(AppTheme.Light)),
+      expect: [ThemeState(AppTheme.Light)],
+    );
   });
 }
