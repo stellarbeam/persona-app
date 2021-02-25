@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/theme_bloc/theme_bloc.dart';
-import '../blocs/theme_bloc/theme_data.dart';
 
 class ThemeSwitcherIcon extends StatelessWidget {
   @override

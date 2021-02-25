@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+part of 'theme_bloc.dart';
 
 enum AppTheme {
   Light,

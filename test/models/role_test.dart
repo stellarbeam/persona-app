@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import '../lib/models/role.dart';
+import 'package:persona/models/role.dart';
 
 void main() {
   test('Role child objects of same class must be equal', () {
