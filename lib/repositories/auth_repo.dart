@@ -32,7 +32,7 @@ class FirebaseAuthRepo {
       codeSent: codeSent,
       forceResendingToken: forceResendingToken,
     );
-    print("Called verify");
+    print("DEBUG: Called verifyPhoneNumber.");
   }
 
   Future<void> setCurrentUserRole(Role role) async {
@@ -71,7 +71,7 @@ class FirebaseAuthRepo {
       }
       return role;
     } else {
-      print("No such document");
+      print("DEBUG: No such document");
     }
     return null;
   }
@@ -114,16 +114,20 @@ class FirebaseAuthRepo {
     Function(String) onFail,
   ) async {
     try {
-      print("Invoking signInWithCredential now");
+      print("DEBUG: Invoking signInWithCredential now.");
       final userCredential =
           await FirebaseAuth.instance.signInWithCredential(authCredential);
       return userCredential;
     } on FirebaseAuthException catch (e) {
+      print(
+        "DEBUG: signInWithCredential: auth failed, exception is of type FirebaseAuthException.",
+      );
       onFail(e.code);
     } catch (e) {
-      print("Fallback handler:");
+      onFail(
+        "DEBUG: signInWithCredential: auth failed, exception is NOT of type FirebaseAuthException. Error is:",
+      );
       print(e);
-      onFail("Auth has failed");
     }
     return null;
   }

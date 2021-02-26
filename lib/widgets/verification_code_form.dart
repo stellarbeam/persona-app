@@ -57,12 +57,10 @@ class VerificationCodeForm extends StatelessWidget {
               cursorColor: state.themeData.formFieldText,
               animationDuration: Duration(milliseconds: 300),
               backgroundColor: Colors.transparent,
-              // enableActiveFill: true,
               errorAnimationController: errorController,
               controller: textEditingController,
               keyboardType: TextInputType.number,
               onChanged: (value) {
-                print(value);
                 setCurrentText(value);
               },
               beforeTextPaste: (text) {

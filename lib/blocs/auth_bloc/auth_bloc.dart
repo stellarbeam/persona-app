@@ -26,9 +26,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   void _onFail(String code) {
     if (code == 'invalid-verification-code') {
-      //? Use callback from otp_input_screen
-      // Right now handled by null checking of `user` value
-      print("Wrong code");
+      print("DEBUG: Wrong OTP was entered.");
     } else {
       print(code);
     }
@@ -43,20 +41,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   void _onVerificationFail(FirebaseAuthException exception) {
-    print("Auth failed");
+    print("DEBUG: Auth failed");
     print(exception.code);
     this.add(AuthConnectionError());
   }
 
   void _onCodeSent(String verificationId, int resendToken) {
-    print("Code has been sent.");
+    print("DEBUG: Code has been sent.");
     isCodeSent = true;
     _verificationId = verificationId;
     _resendToken = resendToken;
   }
 
   void _onCodeAutoRetrievalTimeout(String verificationId) {
-    print("Timed out waiting for SMS");
+    print("DEBUG: Timed out waiting for SMS.");
     timedOut = true;
   }
 

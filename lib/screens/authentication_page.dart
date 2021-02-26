@@ -51,46 +51,53 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
           } else if (state is ProfileCompletion) {
             return ProfileCompletionScreen(_authBloc);
           } else if (state is NoConnectivity) {
-            return BlocBuilder<ThemeBloc, ThemeState>(
-              builder: (context, state) {
-                return Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: state.themeData.backgroundGradient,
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'No connectivity!',
-                      style: TextStyle(
-                        color: state.themeData.helpText,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                );
-              },
-            );
+            return _buildNoConnectivityScreen();
           } else {
-            // Plain gradient
-            return BlocBuilder<ThemeBloc, ThemeState>(
-              builder: (context, state) {
-                return Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: state.themeData.backgroundGradient,
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                  ),
-                );
-              },
-            );
+            return _buildPlainGradientScreen();
           }
         },
       ),
+    );
+  }
+
+  BlocBuilder<ThemeBloc, ThemeState> _buildPlainGradientScreen() {
+    return BlocBuilder<ThemeBloc, ThemeState>(
+      builder: (context, state) {
+        return Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: state.themeData.backgroundGradient,
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  BlocBuilder<ThemeBloc, ThemeState> _buildNoConnectivityScreen() {
+    return BlocBuilder<ThemeBloc, ThemeState>(
+      builder: (context, state) {
+        return Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: state.themeData.backgroundGradient,
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+          child: Center(
+            child: Text(
+              'No connectivity!',
+              style: TextStyle(
+                color: state.themeData.helpText,
+                fontSize: 20,
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
