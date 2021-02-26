@@ -12,8 +12,9 @@ import 'blocs/theme_bloc/theme_bloc.dart';
 import 'screens/authentication_page.dart';
 import 'localization/app_localization.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -23,24 +24,14 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  AuthBloc _authBloc;
+  AuthBloc _authBloc = AuthBloc();
 
   @override
   void initState() {
-    _authBloc = AuthBloc();
-    initializeFlutterFire();
     super.initState();
-  }
 
-  void initializeFlutterFire() async {
-    try {
-      await Firebase.initializeApp();
-      _authBloc.add(FirebaseInitialized());
-      print("Firebase initialized.");
-    } catch (e) {
-      print('Error $e}');
-      // _authBloc.add(ConnectionFailed());
-    }
+    // Notify auth bloc that firebase has been initialized
+    _authBloc.add(FirebaseInitialized());
   }
 
   @override
