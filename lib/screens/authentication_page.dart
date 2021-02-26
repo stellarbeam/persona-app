@@ -9,6 +9,7 @@ import 'phone_input_screen.dart';
 import 'otp_input_screen.dart';
 import 'profile_completion_screen.dart';
 import 'onboarding_screen.dart';
+import 'home_screen.dart';
 
 class AuthenticationPage extends StatefulWidget {
   static const routeName = '/sign-in';
@@ -36,6 +37,8 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
           if (state is ProfileCompleted) {
             Navigator.of(context)
                 .pushReplacementNamed(OnboardingScreen.routeName);
+          } else if (state is UserAuthorized) {
+            Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
           }
         },
         builder: (context, state) {
@@ -45,12 +48,6 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
             return PhoneInputScreen(_authBloc);
           } else if (state is AuthCodeSent) {
             return OtpInputScreen(_authBloc, state.phoneNumber);
-          } else if (state is UserAuthorized) {
-            return Container(
-              child: Center(
-                child: Text("Signed in"),
-              ),
-            );
           } else if (state is ProfileCompletion) {
             return ProfileCompletionScreen(_authBloc);
           } else if (state is NoConnectivity) {

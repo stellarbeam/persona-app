@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,8 +12,12 @@ class LanguageSwitcherIcon extends StatelessWidget {
         Icons.language,
         color: Colors.white,
       ),
-      onSelected: (String langCode) {
-        BlocProvider.of<LangBloc>(context).add(LangChanged(langCode));
+      onSelected: (String languageCode) async {
+        BlocProvider.of<LangBloc>(context).add(LangChanged(languageCode));
+        await FirebaseAnalytics().logEvent(
+          name: 'lang_change',
+          parameters: {'lang_code': languageCode},
+        );
       },
       itemBuilder: (context) => LangBloc.supportedLanguages.map((lang) {
         return PopupMenuItem<String>(
