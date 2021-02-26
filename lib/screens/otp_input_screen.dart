@@ -104,7 +104,8 @@ class _OtpInputScreenState extends State<OtpInputScreen> {
     final _appLocalizations = AppLocalizations.of(context);
     return BlocBuilder<ThemeBloc, ThemeState>(
       builder: (context, state) {
-        return Container(
+        return AnimatedContainer(
+          duration: Duration(milliseconds: 200),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: state.themeData.backgroundGradient,
@@ -115,7 +116,7 @@ class _OtpInputScreenState extends State<OtpInputScreen> {
           child: SafeArea(
             child: Stack(
               children: [
-                _buildThemeSwitcherIcon(state, context),
+                _buildThemeSwitcherIcon(),
                 _buildLanguageChangerIcon(),
                 Column(
                   children: <Widget>[
@@ -228,7 +229,7 @@ class _OtpInputScreenState extends State<OtpInputScreen> {
     );
   }
 
-  Positioned _buildThemeSwitcherIcon(ThemeState state, BuildContext context) {
+  Positioned _buildThemeSwitcherIcon() {
     return Positioned(
       top: 12,
       right: 12,

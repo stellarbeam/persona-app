@@ -38,8 +38,8 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
     return BlocBuilder<ThemeBloc, ThemeState>(
       builder: (context, state) {
         final _appLocalizations = AppLocalizations.of(context);
-        return Container(
-          padding: MediaQuery.of(context).viewInsets,
+        return AnimatedContainer(
+          duration: Duration(milliseconds: 200),
           height: MediaQuery.of(context).size.height,
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -48,36 +48,39 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
               end: Alignment.bottomCenter,
             ),
           ),
-          child: SafeArea(
-            child: SingleChildScrollView(
-              child: Stack(
-                children: [
-                  _buildThemeSwitcherIcon(state, context),
-                  _buildLanguageChangerIcon(),
-                  Column(
-                    children: [
-                      SizedBox(height: 60),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Text(
-                          _appLocalizations.translate('complete_profile'),
-                          style: TextStyle(
-                            color: state.themeData.helpText,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22,
+          child: Padding(
+            padding: MediaQuery.of(context).viewInsets,
+            child: SafeArea(
+              child: SingleChildScrollView(
+                child: Stack(
+                  children: [
+                    _buildThemeSwitcherIcon(state, context),
+                    _buildLanguageChangerIcon(),
+                    Column(
+                      children: [
+                        SizedBox(height: 60),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Text(
+                            _appLocalizations.translate('complete_profile'),
+                            style: TextStyle(
+                              color: state.themeData.helpText,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 22,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
                         ),
-                      ),
-                      SizedBox(height: 30),
-                      _buildRoleSelector(),
-                      Padding(
-                        padding: const EdgeInsets.all(15),
-                        child: _buildForm(),
-                      ),
-                    ],
-                  ),
-                ],
+                        SizedBox(height: 30),
+                        _buildRoleSelector(),
+                        Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: _buildForm(),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
