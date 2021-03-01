@@ -9,19 +9,19 @@ part 'connectivity_event.dart';
 part 'connectivity_state.dart';
 
 class ConnectivityBloc extends Bloc<ConnectivityEvent, ConnectivityState> {
-  StreamSubscription<ConnectivityResult> subscription;
+  StreamSubscription<ConnectivityResult> _subscription;
 
   ConnectivityBloc() : super(ConnectivityState(connected: false)) {
-    /// The callback to listen is expected to of type [void]
-    subscription =
+    /// The callback to `listen` is expected to of type [void]
+    _subscription =
         Connectivity().onConnectivityChanged.listen((connectivityResult) {
       this.add(ConnectivityStatusChanged(connectivityResult));
     });
   }
 
   @override
-  Future<void> close() {
-    subscription.cancel();
+  Future<void> close() async {
+    await _subscription.cancel();
     return super.close();
   }
 

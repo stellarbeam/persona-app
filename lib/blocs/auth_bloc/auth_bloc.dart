@@ -11,7 +11,7 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  FirebaseAuthRepo _authRepo;
+  FirebaseAuthRepo _authRepo = FirebaseAuthRepo();
   bool isCodeSent = false;
   bool timedOut = false;
   bool waitingForVerification = false;
@@ -19,6 +19,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   String _verificationId = "";
   String _phoneNumber;
   int _resendToken;
+
+  AuthBloc() : super(AuthInitial());
 
   void _addVerificationCompleteEvent(User user) {
     this.add(VerificationComplete(user));
@@ -58,57 +60,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     timedOut = true;
   }
 
-  AuthBloc() : super(AuthInitial()) {
-    _authRepo = FirebaseAuthRepo();
-  }
-
   @override
   Stream<AuthState> mapEventToState(
     AuthEvent event,
   ) async* {
     if (event is FirebaseInitialized) {
-      if (_authRepo.isAuthenticated()) {
-        final user = await _authRepo.getUser();
-        final profileData = await _authRepo.getUserProfile();
-        if (profileData == null || profileData['name'] == null) {
-          yield UserAuthorized(user);
-        } else {
-          yield ProfileCompletion(user);
-        }
-      } else {
-        yield UserUnauthorized();
-      }
+      yield* _onFirebaseInitilaized();
     } else if (event is AuthSendOTP) {
-      _phoneNumber = event.number;
-      yield AuthCodeSent(_phoneNumber);
-
-      _authRepo.verifyPhoneNumber(
-        phoneNumber: event.number,
-        verificationCompleted: _onVerificationComplete,
-        verificationFailed: _onVerificationFail,
-        codeAutoRetrievalTimeout: _onCodeAutoRetrievalTimeout,
-        codeSent: _onCodeSent,
-      );
+      yield* _onAuthSendOTP(event);
     } else if (event is EnterVerificationCode) {
-      // Use this to show spinner within otp_input_screen
-      waitingForVerification = true;
-      incorrectOtp = false;
-
-      var user = await _authRepo.signInWithSmsCode(
-        event.smsCode,
-        _verificationId,
-        _onFail,
-      );
-
-      waitingForVerification = false;
-
-      if (user == null) {
-        incorrectOtp = true;
-        event.onIncorrectOtp();
-        yield AuthCodeSent(_phoneNumber);
-      } else {
-        yield ProfileCompletion(user);
-      }
+      yield* _onEnterVerificationCode(event);
     } else if (event is VerificationComplete) {
       yield ProfileCompletion(event.user);
     } else if (event is RequestResendOtp) {
@@ -125,6 +86,56 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       yield ProfileCompleted();
     } else if (event is AuthConnectionError) {
       yield NoConnectivity();
+    }
+  }
+
+  Stream<AuthState> _onEnterVerificationCode(
+      EnterVerificationCode event) async* {
+    // Use this to show spinner within otp_input_screen
+    waitingForVerification = true;
+    incorrectOtp = false;
+
+    var user = await _authRepo.signInWithSmsCode(
+      event.smsCode,
+      _verificationId,
+      _onFail,
+    );
+
+    waitingForVerification = false;
+
+    if (user == null) {
+      incorrectOtp = true;
+      event.onIncorrectOtp();
+      yield AuthCodeSent(_phoneNumber);
+    } else {
+      yield ProfileCompletion(user);
+    }
+  }
+
+  Stream<AuthState> _onAuthSendOTP(AuthSendOTP event) async* {
+    _phoneNumber = event.number;
+    yield AuthCodeSent(_phoneNumber);
+
+    _authRepo.verifyPhoneNumber(
+      phoneNumber: event.number,
+      verificationCompleted: _onVerificationComplete,
+      verificationFailed: _onVerificationFail,
+      codeAutoRetrievalTimeout: _onCodeAutoRetrievalTimeout,
+      codeSent: _onCodeSent,
+    );
+  }
+
+  Stream<AuthState> _onFirebaseInitilaized() async* {
+    if (_authRepo.isAuthenticated()) {
+      final user = await _authRepo.getUser();
+      final profileData = await _authRepo.getUserProfile();
+      if (profileData == null || profileData['name'] == null) {
+        yield UserAuthorized(user);
+      } else {
+        yield ProfileCompletion(user);
+      }
+    } else {
+      yield UserUnauthorized();
     }
   }
 }
